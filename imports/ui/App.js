@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
-class App extends Component{
+export default class App extends Component{
     constructor(props){
         super(props);
     }
@@ -15,9 +15,9 @@ class App extends Component{
 }
 
 
-export default withTracker(()=>{
-    // Meteor.subscribe("algo");
-    return{
-        //las subscripciones.
-    }
-})(App);
+// export default withTracker(()=>{
+//     // Meteor.subscribe("algo");
+//     return{
+//         //las subscripciones.
+//     }
+// })(App);
