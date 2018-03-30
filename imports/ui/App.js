@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
+import "bootstrap/dist/css/bootstrap.css";
+import { Jumbotron } from "reactstrap";
 
 export default class App extends Component {
   constructor (props) {
@@ -9,7 +11,7 @@ export default class App extends Component {
 
   render () {
     return (
-      <div>Hola mundo!!!! :D</div>
+      <Jumbotron><h1>Hola mundo!!!! :D</h1></Jumbotron>
     );
   }
 }
