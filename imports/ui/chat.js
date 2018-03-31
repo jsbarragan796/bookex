@@ -74,6 +74,8 @@ export default class Chat extends Component {
     );
   }
 }
+
+//prop types de chat
 Chat.propTypes = {
   usuario: PropTypes.object,
   chat: PropTypes.object,
