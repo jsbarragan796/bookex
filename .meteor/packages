@@ -21,3 +21,4 @@ react-meteor-data
 webapp
 accounts-ui
 accounts-password
+session

@@ -1,36 +1,27 @@
 import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
-import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.css";
-import AccountsUIWrapper from "./AccountsUIWrapper.js";
-import { Notificaciones } from "../api/notificaciones.js";
-import Home from "./home.js";
 import { Jumbotron,
   Navbar,
   NavbarBrand,
   Nav,
   NavItem,
   NavLink } from "reactstrap";
+import AccountsUIWrapper from "./AccountsUIWrapper.js";
+import { Notificaciones } from "../api/notificaciones.js";
+import Home from "./home.js";
 
 class App extends Component {
   constructor (props) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleSubmit (event) {
-    event.preventDefault();
-
-    // Find the text field via the React ref
-    const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-    Meteor.call("noti.insert", text);
-    ReactDOM.findDOMNode(this.refs.textInput).value = "";
   }
 
   render () {
     const usuario = this.props.currentUser ? ", " + this.props.currentUser.username : " a Bookex";
     const cuerpo = this.props.currentUser ? (
-      <Home handle={this.handleSubmit} usuario={this.props.currentUser} noti= {this.props.notificaciones}/>
+      <Home usuario={this.props.currentUser} />
     ) : " ";
     return (
       <div>
@@ -59,12 +50,13 @@ class App extends Component {
     );
   }
 }
+App.propTypes = {
+  currentUser: PropTypes.object
+};
 
 
 export default withTracker(() => {
-  Meteor.subscribe("notificaciones");
   return {
-    currentUser: Meteor.user(),
-    notificaciones: Notificaciones.find({}).fetch()
+    currentUser: Meteor.user()
   };
 })(App);
