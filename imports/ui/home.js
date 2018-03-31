@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Chat from "./chat.js";
-import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import ReactDOM from "react-dom";
-import { Notificaciones } from "../api/notificaciones.js";
-import { Chats } from "../api/notificaciones.js";
 import {
   ListGroup,
   ListGroupItem,
@@ -15,8 +11,9 @@ import {
   Form,
   Label,
   Input } from "reactstrap";
+import Chat from "./chat.js";
 
-class Home extends Component {
+export default class Home extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -95,13 +92,3 @@ Home.propTypes = {
   usuario: PropTypes.object,
   chats: PropTypes.array
 };
-
-
-export default withTracker(() => {
-  Meteor.subscribe("notificaciones");
-  Meteor.subscribe("chats");
-  return {
-    notificaciones: Notificaciones.find({}).fetch(),
-    chats: Chats.find({}).fetch()
-  };
-})(Home);
