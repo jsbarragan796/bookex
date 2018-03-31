@@ -11,7 +11,9 @@ export default class App extends Component {
 
   render () {
     return (
-      <Jumbotron><h1>Hola mundo!!!! :D</h1></Jumbotron>
+      <Jumbotron>
+        <h1>Hola mundo!!!! :D</h1>
+      </Jumbotron>
     );
   }
 }
