@@ -4,7 +4,8 @@ import { Meteor } from "meteor/meteor";
 import { InputGroup, Media, Button, Input, InputGroupAddon } from "reactstrap";
 import ReactDOM from "react-dom";
 import { Tracker } from "meteor/tracker";
-import { Notificaciones } from "../api/notificaciones.js";
+import { Publicaciones } from "../api/publicaciones.js";
+import { Comentarios } from "../api/publicaciones.js";
 
 
 export default class Chat extends Component {
@@ -19,7 +20,7 @@ export default class Chat extends Component {
     Tracker.autorun(() => {
       Meteor.subscribe("notificaciones");
       this.setState({
-        mensajes: Notificaciones.find({ chatId: this.props.chat._id }).fetch()
+        mensajes: Publicaciones.find({ chatId: this.props.chat._id }).fetch()
       });
     });
   }

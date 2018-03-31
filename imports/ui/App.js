@@ -1,6 +1,9 @@
 import React, { Component } from "react";
-import { withTracker } from "meteor/react-meteor-data";
+import Home from "./home.js";
 import PropTypes from "prop-types";
+import AccountsUIWrapper from "./AccountsUIWrapper.js";
+import { Notificaciones } from "../api/notificaciones.js";
+import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import "bootstrap/dist/css/bootstrap.css";
 import { Jumbotron,
@@ -9,11 +12,15 @@ import { Jumbotron,
   Nav,
   NavItem,
   NavLink } from "reactstrap";
+<<<<<<< HEAD
 import AccountsUIWrapper from "./AccountsUIWrapper.js";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Publicaciones } from "../api/publicaciones.js";
 import { Comentarios } from "../api/publicaciones.js";
 import Home from "./home.js";
+=======
+
+>>>>>>> ec69e7fb9fcebde48407fddea47dbf323543f2c2
 
 class App extends Component {
   constructor (props) {
