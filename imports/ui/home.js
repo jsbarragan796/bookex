@@ -92,7 +92,7 @@ Home.propTypes = {
 
 
 export default withTracker(() => {
-  // Meteor.subscribe("notificaciones");
+  Meteor.subscribe("notificaciones");
   Meteor.subscribe("chats");
   return {
     notificaciones: Notificaciones.find({}).fetch(),

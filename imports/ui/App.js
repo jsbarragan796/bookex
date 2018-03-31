@@ -11,6 +11,8 @@ import { Jumbotron,
   NavLink } from "reactstrap";
 import AccountsUIWrapper from "./AccountsUIWrapper.js";
 import { Notificaciones } from "../api/notificaciones.js";
+import { Publicaciones } from "../api/publicaciones.js";
+import { Comentarios } from "../api/publicaciones.js";
 import Home from "./home.js";
 
 class App extends Component {
