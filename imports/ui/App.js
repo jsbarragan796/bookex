@@ -7,6 +7,7 @@ import ReactDOM from "react-dom";
 import { Meteor } from "meteor/meteor";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
+import { Publicaciones } from "../api/publicaciones.js";
 import { Jumbotron,
   Navbar,
   NavbarBrand,
@@ -117,7 +118,8 @@ class App extends Component {
         chatSeleccionado={this.state.chatSeleccionado}
         mensajes= {this.props.notificaciones} notificaciones={this.props.notificaciones}
         chats = {this.props.chats} seleccionarChat={this.seleccionarChat}
-        createChat= {this.createChat} desSeleccionarChat={this.desSeleccionarChat}/>
+        createChat= {this.createChat} desSeleccionarChat={this.desSeleccionarChat}
+        publicaciones={this.props.publicaciones} />
     ) : " ";
     return (
       <div>
@@ -138,16 +140,18 @@ class App extends Component {
 App.propTypes = {
   usuario: PropTypes.object,
   chats: PropTypes.array,
-  notificaciones: PropTypes.array
+  notificaciones: PropTypes.array,
+  publicaciones: PropTypes.array
 };
-
 
 export default withTracker(() => {
   Meteor.subscribe("notificaciones");
   Meteor.subscribe("chats");
+  Meteor.subscribe("publicaciones");
   return {
     usuario: Meteor.user(),
     notificaciones: Notificaciones.find({}).fetch(),
-    chats: Chats.find({}).fetch()
+    chats: Chats.find({}).fetch(),
+    publicaciones: Publicaciones.find({}).fetch()
   };
 })(App);

@@ -32,6 +32,8 @@ Meteor.methods({
       estado: publicacion.estado,
       para: publicacion.para,
       valorVenta: publicacion.valorVenta,
+      nota: 0,
+      comentarios: [],
       addedAt: new Date(),
       ownerId: this.userId,
       ownerName: Meteor.users.findOne(this.userId).username

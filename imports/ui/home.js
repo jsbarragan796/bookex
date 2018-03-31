@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import Chat from "./chat.js";
+import Publicacion from "./publicacion.js";
 import {
   ListGroup,
   ListGroupItem,
@@ -9,8 +11,7 @@ import {
   Form,
   Label,
   Input } from "reactstrap";
-import Chat from "./chat.js";
-import Publicacion from "./publicacion.js";
+
 
 export default class Home extends Component {
   constructor (props) {
@@ -31,7 +32,7 @@ export default class Home extends Component {
     } else {
       chats = (
         <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
-          chatSeleccionado={this.props.chatSeleccionado} enviarMensaje= {this.props.enviarMensaje}
+          chatSeleccionado={this.props.chatSeleccionado}
           mensajes= {this.props.notificaciones}/>
       );
     }
@@ -39,24 +40,9 @@ export default class Home extends Component {
   }
   darPublicaciones () {
     let publicaciones = "";
-    if (this.props.chatSeleccionado === null &&
-    typeof this.props.chats !== "undefined") {
-      publicaciones = this.props.chats.map((n, i) => {
-        return (
-          <ListGroup>
-            <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
-              {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
-            </ListGroupItem>
-          </ListGroup>
-        );
-      });
-    } else {
-      publicaciones = (
-        <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
-          chatSeleccionado={this.props.chatSeleccionado} enviarMensaje= {this.props.enviarMensaje}
-          mensajes= {this.props.notificaciones}/>
-      );
-    }
+    publicaciones = (
+      <Publicacion publicaciones={this.props.publicaciones} usuario={this.props.usuario}/>
+    );
     return publicaciones;
   }
 
@@ -77,16 +63,12 @@ export default class Home extends Component {
           </Form>
           {this.darChats()}
         </Col>
-        <Col sm="6">
+        <Col sm="9">
           <h2>Tus Publicaciones</h2>
           <ListGroup>
             {this.darPublicaciones()}
           </ListGroup>
         </Col>
-        <Col sm="3">
-          <p>hola</p>
-        </Col>
-
       </Row>
     );
   }
@@ -106,8 +88,5 @@ Home.propTypes = {
   desSeleccionarChat: PropTypes.func,
   chatSeleccionado: PropTypes.object,
   //Publicaciones
-  seleccionarPublicacion: PropTypes.func,
-  publicacionSeleccionada: PropTypes.object,
-  salirPublicacion: PropTypes.func,
   publicaciones: PropTypes.array
 };

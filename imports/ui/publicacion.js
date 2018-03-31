@@ -16,6 +16,7 @@ export default class Publicacion extends Component {
       crearPublicacion: false
     };
     this.agregarPublicacion = this.agregarPublicacion.bind(this);
+    this.cambioVista = this.cambioVista.bind(this);
   }
 
   renderizarPublicaciones () {
@@ -61,6 +62,7 @@ export default class Publicacion extends Component {
       genero: genero, isbn: isbn, estado: estado, para: para, valorVenta: valorVenta };
     // Guardar publicacion
     Meteor.call("publicacion.insert", publicacion);
+
     // Find an creal all the field via the React ref
     ReactDOM.findDOMNode(this.refs.titulo).value = "";
     ReactDOM.findDOMNode(this.refs.autores).value = "";
@@ -71,12 +73,14 @@ export default class Publicacion extends Component {
     ReactDOM.findDOMNode(this.refs.para).value = "";
     ReactDOM.findDOMNode(this.refs.valorVenta).value = "";
     ReactDOM.findDOMNode(this.refs.genero).value = "";
+
+    this.cambioVista();
   }
 
   darAnios () {
     let a = [];
     for (var i = 1800; i < 2018; i++) {
-      a.push(<option>i</option>);
+      a.push(<option key={i}>{i}</option>);
     }
     return a;
   }
@@ -100,19 +104,15 @@ export default class Publicacion extends Component {
       "Viajes",
       "Cultura",
       "Otros temas"];
-    return a.map((n) => {
-      return (<option>n</option>);
+    return a.map((n, i) => {
+      return (<option key={i}>{n}</option>);
     });
   }
 
   crearCuerpo () {
     let resp = "";
-
     if (this.state.crearPublicacion) {
       resp = (<div>
-
-        {this.renderizarPublicaciones()}
-        <br />
         <Form className="new-Publicacion" onSubmit={this.agregarPublicacion} >
           <FormGroup>
             <Label for="titulo">Titulo: </Label>
@@ -143,23 +143,23 @@ export default class Publicacion extends Component {
           </FormGroup>
           <FormGroup>
             <Label for="edicion">Edicion</Label>
-            <Input type="select" name="edicion" id="edicion">
+            <Input type="select" name="edicion" id="edicion" ref="edicion">
               {this.darAnios()}
             </Input>
           </FormGroup>
           <FormGroup>
             <Label for="genero">Edicion</Label>
-            <Input type="select" name="genero" id="genero">
+            <Input type="select" name="genero" id="genero" ref="genero">
               {this.darGeneros()}
             </Input>
           </FormGroup>
           <FormGroup>
             <Label for="isbn">Isbn</Label>
-            <Input type="number" name="isbn" id="isbn"/>
+            <Input type="number" name="isbn" id="isbn" ref="isbn"/>
           </FormGroup>
           <FormGroup>
-            <Label for="estado">Isbn</Label>
-            <Input type="select" name="estado" id="estado">
+            <Label for="estado">Estado</Label>
+            <Input type="select" name="estado" id="estado" ref="estado">
               <option>Malo</option>
               <option>Regular</option>
               <option>Aceptable</option>
@@ -167,8 +167,8 @@ export default class Publicacion extends Component {
             </Input>
           </FormGroup>
           <FormGroup>
-            <Label for="para">Isbn</Label>
-            <Input type="select" name="para" id="para">
+            <Label for="para">Intención de la publicación</Label>
+            <Input type="select" name="para" id="para" ref="para">
               <option>Regalar</option>
               <option>Vender</option>
               <option>Cambiar</option>
@@ -176,7 +176,7 @@ export default class Publicacion extends Component {
           </FormGroup>
           <FormGroup>
             <Label for="valorVenta">¿ En cuanto valoras el libro en COPs?</Label>
-            <Input type="number" name="valorVenta" id="valorVenta"/>
+            <Input type="number" name="valorVenta" id="valorVenta" ref="valorVenta"/>
           </FormGroup>
           <Button color="primary">Crear</Button>
           <Button onClick={this.cambioVista} color="danger">Cancelar</Button>
@@ -205,8 +205,5 @@ export default class Publicacion extends Component {
 //prop types de chat
 Publicacion.propTypes = {
   usuario: PropTypes.object,
-  publicacionSeleccionada: PropTypes.object,
-  seleccionarPublicacion: PropTypes.func,
-  salirPublicacion: PropTypes.func,
   publicaciones: PropTypes.array
 };
