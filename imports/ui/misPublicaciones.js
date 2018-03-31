@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
-import { InputGroup, Media, Button, Input, InputGroupAddon } from "reactstrap";
-import ReactDOM from "react-dom";
 import { Tracker } from "meteor/tracker";
 import { Publicaciones } from "../api/publicaciones.js";
 import { Comentarios } from "../api/publicaciones.js";
+import { InputGroup, Media, Button, Input, InputGroupAddon } from "reactstrap";
 
 
 export default class Chat extends Component {

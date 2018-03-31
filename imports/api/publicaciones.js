@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import { check } from "meteor/check";
+
 export const Publicaciones = new Mongo.Collection("libros");
 export const Comentarios = new Mongo.Collection("Comentarios");
 
