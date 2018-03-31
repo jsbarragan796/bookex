@@ -4,12 +4,12 @@ import { Meteor } from "meteor/meteor";
 import "bootstrap/dist/css/bootstrap.css";
 import { Jumbotron } from "reactstrap";
 
-export default class App extends Component {
-  constructor (props) {
+ class App extends Component {
+  constructor(props) {
     super(props);
   }
 
-  render () {
+  render() {
     return (
       <Jumbotron>
         <h1>Hola mundo!!!! :D</h1>
@@ -19,9 +19,9 @@ export default class App extends Component {
 }
 
 
-// export default withTracker(()=>{
-//     // Meteor.subscribe("algo");
-//     return{
-//         //las subscripciones.
-//     }
-// })(App);
+export default withTracker(()=>{
+    // Meteor.subscribe("algo");
+    return{
+        //las subscripciones.
+    }
+})(App);
