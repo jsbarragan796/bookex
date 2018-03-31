@@ -1,6 +1,8 @@
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import { check } from "meteor/check";
+
+
 export const Notificaciones = new Mongo.Collection("notificaciones");
 export const Chats = new Mongo.Collection("chats");
 

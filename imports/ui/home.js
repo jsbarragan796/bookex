@@ -1,13 +1,23 @@
 import React, { Component } from "react";
-import { withTracker } from "meteor/react-meteor-data";
 import PropTypes from "prop-types";
+import Chat from "./chat.js";
+import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
-import { ListGroup, ListGroupItem, Row, Col, Button, Form, Label, Input } from "reactstrap";
 import ReactDOM from "react-dom";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
-import Chat from "./chat.js";
 import { Session } from "meteor/session";
+import {
+  ListGroup,
+  ListGroupItem,
+  Row,
+  Col,
+  Button,
+  Form,
+  Label,
+  Input } from "reactstrap";
+
+  
 class Home extends Component {
   constructor (props) {
     super(props);
