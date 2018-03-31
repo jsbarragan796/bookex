@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chat from "./chat.js";
 import Publicacion from "./publicacion.js";
+import ListaPublicaciones from "./listaPublicaciones.js";
 import {
-  ListGroup,
   ListGroupItem,
   Row,
   Col,
@@ -64,10 +64,8 @@ export default class Home extends Component {
           {this.darChats()}
         </Col>
         <Col sm="9">
-          <h2>Tus Publicaciones</h2>
-          <ListGroup>
-            {this.darPublicaciones()}
-          </ListGroup>
+          {this.darPublicaciones()}
+          <ListaPublicaciones publicaciones={this.props.publicaciones} usuario={this.props.usuario} />
         </Col>
       </Row>
     );

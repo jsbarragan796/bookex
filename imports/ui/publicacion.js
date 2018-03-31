@@ -8,15 +8,32 @@ import {
   Input,
   FormGroup,
   Form,
-  Label } from "reactstrap";
+  Label,
+  Card,
+  CardBody, CardSubtitle, CardTitle, CardText, CardFooter } from "reactstrap";
 export default class Publicacion extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      crearPublicacion: false
+      crearPublicacion: false,
+      publicacionSelected: null
     };
     this.agregarPublicacion = this.agregarPublicacion.bind(this);
     this.cambioVista = this.cambioVista.bind(this);
+    this.seleccionarPublicacion = this.seleccionarPublicacion.bind(this);
+    this.desSeleccionarPublicacion = this.desSeleccionarPublicacion.bind(this);
+    this.eliminarPublicacion = this.eliminarPublicacion.bind(this);
+  }
+
+  seleccionarPublicacion (publicacion) {
+    this.setState({
+      publicacionSelected: publicacion
+    });
+  }
+  desSeleccionarPublicacion () {
+    this.setState({
+      publicacionSelected: null
+    });
   }
 
   renderizarPublicaciones () {
@@ -28,17 +45,68 @@ export default class Publicacion extends Component {
     // mensajes = mensajes.slice(tam - 10);
     return publicaciones.map((n) => {
       return (
-        <Media key={n._id}>
-          <Media body>
-            <Media heading>
-              {n.titulo}
+        // mejorar interfaz !!
+        <div key={n._id}>
+          <Media >
+            <Media body>
+              <Media heading>
+                Titulo: {n.titulo}
+              </Media>
+              Autor: {n.autores} <Button
+                onClick={() => this.seleccionarPublicacion(n)} color="primary">
+              ver detalle</Button>
             </Media>
-            autor:{n.autores}
-            <Button onClick={() => this.props.seleccionarPublicacion(n)} color="primary">ver detalle</Button>
           </Media>
-        </Media>
+          <hr/>
+        </div>
       );
     });
+  }
+  getNota (nota) {
+    let resp = "";
+    for (var i = 0; i < nota; i++) {
+      resp = resp + "⭐";
+    }
+    return resp;
+  }
+
+  renderizarPublicacion () {
+    const publicacion = this.state.publicacionSelected;
+    return (
+    // mejorar interfaz !!
+      <Card>
+        <CardBody>
+          <CardTitle>{publicacion.titulo}</CardTitle>
+          <CardSubtitle>{publicacion.autores}</CardSubtitle>
+          <br/>
+          <CardText>
+            <strong> Editorial: </strong>{publicacion.autores}
+            <br/>
+            <strong> Edición: </strong>{publicacion.edicion}
+            <br/>
+            <strong> Genero: </strong>{publicacion.genero}
+            <br/>
+            <strong> ISBN: </strong>{publicacion.isbn}
+            <br/>
+            <strong> Editorial: </strong>{publicacion.autores}
+            <br/>
+            <strong> Estado: </strong>{publicacion.estado}
+            <br/>
+            <strong> Motivo publicación: </strong>{publicacion.para}
+            <br/>
+            <strong> Valoracion: </strong>{publicacion.valorVenta}
+            <br/>
+            <strong> Nota: </strong> {this.getNota(publicacion.nota)}
+          </CardText>
+          <Button color="danger" onClick={this.eliminarPublicacion}>Eliminar</Button>
+          <br/>
+          <Button onClick={this.desSeleccionarPublicacion} color="primary">Atras</Button>
+          <CardFooter className="text-muted">
+            Publicado el: {publicacion.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")}
+          </CardFooter>
+        </CardBody>
+      </Card>
+    );
   }
   cambioVista () {
     this.setState({
@@ -46,6 +114,10 @@ export default class Publicacion extends Component {
     });
   }
 
+  eliminarPublicacion () {
+    Meteor.call("publicacion.remove", this.state.publicacionSelected._id);
+    this.desSeleccionarPublicacion();
+  }
   agregarPublicacion (event) {
     event.preventDefault();
     // Find all the  field via the React ref
@@ -76,6 +148,7 @@ export default class Publicacion extends Component {
 
     this.cambioVista();
   }
+
 
   darAnios () {
     let a = [];
@@ -113,6 +186,7 @@ export default class Publicacion extends Component {
     let resp = "";
     if (this.state.crearPublicacion) {
       resp = (<div>
+        <h1>Publicación a crear</h1>
         <Form className="new-Publicacion" onSubmit={this.agregarPublicacion} >
           <FormGroup>
             <Label for="titulo">Titulo: </Label>
@@ -183,9 +257,16 @@ export default class Publicacion extends Component {
         </Form>
       </div>);
     } else {
+      let resp2 = "";
+      if (this.state.publicacionSelected === null) {
+        resp2 = this.renderizarPublicaciones();
+      } else {
+        resp2 = this.renderizarPublicacion();
+      }
       resp = (<div>
-        <Button onClick={this.cambioVista} color="primary">Crear publicacion</Button>
-        {this.renderizarPublicaciones()}
+        <h1>Tus Publicaciones  </h1>  <Button onClick={this.cambioVista} color="primary">Crear publicacion</Button>
+        <hr/>
+        {resp2}
         <br />
       </div>);
     }
