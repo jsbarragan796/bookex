@@ -50,6 +50,8 @@ class App extends Component {
     );
   }
 }
+
+//prop types for App
 App.propTypes = {
   currentUser: PropTypes.object
 };
