@@ -6,7 +6,6 @@ import { Meteor } from "meteor/meteor";
 import ReactDOM from "react-dom";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
-import { Session } from "meteor/session";
 import {
   ListGroup,
   ListGroupItem,
@@ -17,7 +16,6 @@ import {
   Label,
   Input } from "reactstrap";
 
-  
 class Home extends Component {
   constructor (props) {
     super(props);
@@ -35,13 +33,11 @@ class Home extends Component {
     ReactDOM.findDOMNode(this.refs.idUser2).value = "";
   }
   seleccionarChat (chat) {
-    Session.setDefault("chatId", chat._id);
     this.setState({
       chatSeleccionado: chat
     });
   }
   desSeleccionarChat () {
-    Session.set("chatId", undefined);
     this.setState({
       chatSeleccionado: null
     });

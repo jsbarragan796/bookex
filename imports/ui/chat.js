@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import { Meteor } from "meteor/meteor";
 import { Tracker } from "meteor/tracker";
 import { Notificaciones } from "../api/notificaciones.js";
-import { 
+import {
   InputGroup,
   Media,
   Button,
