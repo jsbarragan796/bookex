@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import PropTypes from "prop-types";
 import AccountsUIWrapper from "./AccountsUIWrapper.js";
 import { withTracker } from "meteor/react-meteor-data";
-import { Tracker } from "meteor/tracker";
+import ReactDOM from "react-dom";
 import { Meteor } from "meteor/meteor";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
@@ -18,38 +18,111 @@ import Home from "./home.js";
 class App extends Component {
   constructor (props) {
     super(props);
+    this.state = {
+      chatSeleccionado: null,
+      mensajes: [],
+      enHome: true
+    };
+    this.createChat = this.createChat.bind(this);
+    this.seleccionarChat = this.seleccionarChat.bind(this);
+    this.desSeleccionarChat = this.desSeleccionarChat.bind(this);
+    this.cambioStats = this.cambioStats.bind(this);
+    this.cambioHome = this.cambioHome.bind(this);
   }
-  getMensages (chatId) {
-    Tracker.autorun(() => {
-      Meteor.subscribe("notificaciones");
-      this.setState({
-        mensajes: Notificaciones.find({ chatId: chatId }).fetch()
-      });
+
+  seleccionarChat (chat) {
+    this.setState({
+      chatSeleccionado: chat,
+      mensajes: Notificaciones.find({ chatId: chat._id }).fetch()
+    });
+  }
+  desSeleccionarChat () {
+    this.setState({
+      chatSeleccionado: null,
+      mensajes: []
+    });
+  }
+  createChat (event) {
+    event.preventDefault();
+    // Find the text field via the React ref
+    const idUser2 = ReactDOM.findDOMNode(this.refs.idUser2).value.trim();
+    Meteor.call("chat.insert", idUser2);
+    ReactDOM.findDOMNode(this.refs.idUser2).value = "";
+  }
+
+  cambioStats () {
+    this.setState({
+      enHome: false
+    });
+  }
+  cambioHome () {
+    this.setState({
+      enHome: true
     });
   }
 
+  renderNav () {
+    //active
+    let home = "";
+    let stats = "";
+    if (this.props.usuario) {
+      if (this.state.enHome) {
+        home = (
+          <NavItem>
+            <NavLink onClick = {this.cambioHome} active>Home</NavLink>
+          </NavItem>
+        );
+        stats = (
+          <NavItem>
+            <NavLink onClick = {this.cambioStats} > Stats</NavLink>
+          </NavItem>
+        );
+      } else {
+        home = (
+          <NavItem>
+            <NavLink onClick = {this.cambioHome} >Home</NavLink>
+          </NavItem>
+        );
+        stats = (
+          <NavItem>
+            <NavLink onClick = {this.cambioStats} active> Stats</NavLink>
+          </NavItem>
+        );
+      }
+    } else {
+      stats = (
+        <NavItem>
+          <NavLink active> Stats</NavLink>
+        </NavItem>
+      );
+    }
+    return (
+      <Nav navbar>
+        <NavbarBrand >Bookex</NavbarBrand>
+        <NavItem>
+          <NavLink>
+            <AccountsUIWrapper />
+          </NavLink>
+        </NavItem>
+        {home}
+        {stats}
+      </Nav>);
+  }
+
+
   render () {
-    const usuario = this.props.currentUser ? ", " + this.props.currentUser.username : " a Bookex";
-    const cuerpo = this.props.currentUser ? (
-      <Home usuario={this.props.currentUser} />
+    const usuario = this.props.usuario ? ", " + this.props.usuario.username : " a Bookex";
+    const cuerpo = this.state.enHome && this.props.usuario ? (
+      <Home salirChat={this.desSeleccionarChat} usuario={this.props.usuario}
+        chatSeleccionado={this.state.chatSeleccionado}
+        mensajes= {this.props.notificaciones} notificaciones={this.props.notificaciones}
+        chats = {this.props.chats} seleccionarChat={this.seleccionarChat}
+        createChat= {this.createChat} desSeleccionarChat={this.desSeleccionarChat}/>
     ) : " ";
     return (
       <div>
         <Navbar color="faded" light expand="md">
-          <Nav navbar>
-            <NavbarBrand >Bookex</NavbarBrand>
-            <NavItem>
-              <NavLink>
-                <AccountsUIWrapper />
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink >Stats</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink >Home</NavLink>
-            </NavItem>
-          </Nav>
+          {this.renderNav()}
           <Nav className="ml-auto" navbar />
         </Navbar>
         <Jumbotron>
@@ -63,7 +136,9 @@ class App extends Component {
 
 //prop types for App
 App.propTypes = {
-  currentUser: PropTypes.object
+  usuario: PropTypes.object,
+  chats: PropTypes.array,
+  notificaciones: PropTypes.array
 };
 
 
@@ -71,7 +146,7 @@ export default withTracker(() => {
   Meteor.subscribe("notificaciones");
   Meteor.subscribe("chats");
   return {
-    currentUser: Meteor.user(),
+    usuario: Meteor.user(),
     notificaciones: Notificaciones.find({}).fetch(),
     chats: Chats.find({}).fetch()
   };

@@ -26,6 +26,7 @@ Meteor.methods({
       titulo: publicacion.titulo,
       autores: publicacion.autores,
       editorial: publicacion.editorial,
+      genero: publicacion.genero,
       edicion: publicacion.edicion,
       isbn: publicacion.isbn,
       estado: publicacion.estado,
