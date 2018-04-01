@@ -1,5 +1,5 @@
 /* CSS declarations go here */
 div.row {
-  padding-left: 1vw;
-  padding-right: 1vw;
+  margin-left: 1vw;
+  margin-right: 1vw;
 }
