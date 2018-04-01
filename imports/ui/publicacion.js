@@ -124,7 +124,7 @@ export default class Publicacion extends Component {
     const publicacion = { titulo: titulo, autores: autores, editorial: editorial, edicion: edicion,
       genero: genero, isbn: isbn, estado: estado, para: para, valorVenta: valorVenta };
     // Guardar publicacion
-    Meteor.call("publicacion.insert", publicacion);
+    Meteor.call("publicacion.insert", publicacion, this.props.usuario.username);
 
     // Find an creal all the field via the React ref
     ReactDOM.findDOMNode(this.refs.titulo).value = "";

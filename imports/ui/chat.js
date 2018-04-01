@@ -55,7 +55,7 @@ export default class Chat extends Component {
     const name2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
       this.props.chatSeleccionado.username1 : this.props.chatSeleccionado.username2;
     const chatId = this.props.chatSeleccionado._id;
-    Meteor.call("noti.insert", text, ownerId2, chatId, name2);
+    Meteor.call("noti.insert", text, ownerId2, chatId, name2, this.props.usuario.username);
     // this.props.enviarMensaje(text, ownerId2, chatId, name2);
 
     ReactDOM.findDOMNode(this.refs.mensaje).value = "";

@@ -38,7 +38,7 @@ export default class ListaPublicaciones extends Component {
     });
   }
   createChat (idUser2, username2) {
-    Meteor.call("chat.insert", idUser2, username2);
+    Meteor.call("chat.insert", idUser2, username2, this.props.usuario.username);
   }
 
   promedioNota (publicacion, notaNueva) {

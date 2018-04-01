@@ -17,8 +17,9 @@ if (Meteor.isServer) {
 
 
 Meteor.methods({
-  "publicacion.insert" (publicacion) {
+  "publicacion.insert" (publicacion, ownerName) {
     check(publicacion, Object);
+    check(ownerName, String);
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
     }
@@ -36,7 +37,7 @@ Meteor.methods({
       comentarios: [],
       addedAt: new Date(),
       ownerId: this.userId,
-      ownerName: Meteor.users.findOne(this.userId).username
+      ownerName: ownerName
     });
   },
   "comentario.update" (idPublicacion, comentarios, nota) {
@@ -56,9 +57,10 @@ Meteor.methods({
     Publicaciones.remove(idPublicacion);
   },
 
-  "comentario.insert" (text, idPublicacion) {
+  "comentario.insert" (text, idPublicacion, ownerName) {
     check(text, String);
     check(idPublicacion, String);
+    check(ownerName, String);
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
     }
@@ -66,7 +68,7 @@ Meteor.methods({
       text,
       idPublicacion,
       ownerId: this.userId,
-      ownerName: Meteor.users.findOne(this.userId).username
+      ownerName: ownerName
     });
   }
 });
