@@ -65,7 +65,7 @@ export default class Home extends Component {
 
   getNota(nota) {
     let resp = "";
-    if(nota = 0 ){
+    if(nota === 0 ){
       resp = "Aun no hay puntuaciones 😢."
     } else {
       for (var i = 0; i < nota; i++) {
