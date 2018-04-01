@@ -15,12 +15,64 @@ export default class Stats extends Component {
     let pup = publicaciones.slice();
     return pup.sort(comparador);
   }
-  publicacionesNotaTop () {
+  usuarioNotaTop () {
+    function comparadorNota (n1, n2) {
+      if (n1.nota < n2.nota) {
+        return 1;
+      } else if (n1.nota > n2.nota) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+    let calificaciones = this.darPublicacionesOrdenadas(this.props.calificaciones, comparadorNota);
+    calificaciones = calificaciones.slice(0, 5);
+    return (
+      <Col sm="4">
+        <Card>
+          <CardBody>
+            <CardTitle>Top 5  mejores usuarios</CardTitle>
+            <CardSubtitle>Los 5 usuarios con mejores calificaciones en Bookex</CardSubtitle>
+            <CardText>
+              {this.listaCalificaciones(calificaciones)}
+            </CardText>
+          </CardBody>
+        </Card>
+      </Col>
+    );
+  }
+  usuarioNotaNoTop () {
     function comparadorNota (n1, n2) {
       if (n1.nota < n2.nota) {
         return -1;
       } else if (n1.nota > n2.nota) {
         return 1;
+      } else {
+        return 0;
+      }
+    }
+    let calificaciones = this.darPublicacionesOrdenadas(this.props.calificaciones, comparadorNota);
+    calificaciones = calificaciones.slice(0, 5);
+    return (
+      <Col sm="4">
+        <Card>
+          <CardBody>
+            <CardTitle>Top 5 peores usuarios</CardTitle>
+            <CardSubtitle>Los 5 usuarios con peores calificaciones en Bookex</CardSubtitle>
+            <CardText>
+              {this.listaCalificaciones(calificaciones)}
+            </CardText>
+          </CardBody>
+        </Card>
+      </Col>
+    );
+  }
+  publicacionesNotaTop () {
+    function comparadorNota (n1, n2) {
+      if (n1.nota < n2.nota) {
+        return 1;
+      } else if (n1.nota > n2.nota) {
+        return -1;
       } else {
         return 0;
       }
@@ -32,7 +84,7 @@ export default class Stats extends Component {
         <Card>
           <CardBody>
             <CardTitle>Top 5 Publicaciones por nota</CardTitle>
-            <CardSubtitle>Los 5 libros con mejores notas en el sistema</CardSubtitle>
+            <CardSubtitle>Los 5 libros con mejores notas en Bookex</CardSubtitle>
             <CardText>
               {this.listaPublicaciones(publicaciones)}
             </CardText>
@@ -45,9 +97,9 @@ export default class Stats extends Component {
   publicacionesValorTop () {
     function comparadorNota (n1, n2) {
       if (n1.valorVenta < n2.valorVenta) {
-        return -1;
-      } else if (n1.valorVenta > n2.valorVenta) {
         return 1;
+      } else if (n1.valorVenta > n2.valorVenta) {
+        return -1;
       } else {
         return 0;
       }
@@ -58,8 +110,8 @@ export default class Stats extends Component {
       <Col sm="4">
         <Card>
           <CardBody>
-            <CardTitle>Top 5 Publicaciones por valor venta</CardTitle>
-            <CardSubtitle>Los 5 libros con mayor valor en el sistema</CardSubtitle>
+            <CardTitle>Top 5 Publicaciones mayor valor venta</CardTitle>
+            <CardSubtitle>Los 5 libros con mayor valor en Bookex</CardSubtitle>
             <CardText>
               {this.listaPublicaciones(publicaciones)}
             </CardText>
@@ -71,9 +123,9 @@ export default class Stats extends Component {
   publicacionesValorNoTop () {
     function comparadorNota (n1, n2) {
       if (n1.valorVenta < n2.valorVenta) {
-        return 1;
-      } else if (n1.valorVenta > n2.valorVenta) {
         return -1;
+      } else if (n1.valorVenta > n2.valorVenta) {
+        return 1;
       } else {
         return 0;
       }
@@ -84,8 +136,8 @@ export default class Stats extends Component {
       <Col sm="4">
         <Card>
           <CardBody>
-            <CardTitle>Top 5 Publicaciones por valor venta</CardTitle>
-            <CardSubtitle>Los 5 libros con menor valor en el sistema</CardSubtitle>
+            <CardTitle>Top 5 Publicaciones menor valor venta</CardTitle>
+            <CardSubtitle>Los 5 libros con menor valor en Bookex</CardSubtitle>
             <CardText>
               {this.listaPublicaciones(publicaciones)}
             </CardText>
@@ -97,9 +149,9 @@ export default class Stats extends Component {
   publicacionesComentarioTop () {
     function comparadorNota (n1, n2) {
       if (n1.comentarios.length < n2.comentarios.length) {
-        return -1;
-      } else if (n1.comentarios.length > n2.comentarios.length) {
         return 1;
+      } else if (n1.comentarios.length > n2.comentarios.length) {
+        return -1;
       } else {
         return 0;
       }
@@ -111,7 +163,7 @@ export default class Stats extends Component {
         <Card>
           <CardBody>
             <CardTitle>Top 5 Publicaciones por número comentarios</CardTitle>
-            <CardSubtitle>Los 5 libros con más comentarios en el sistema</CardSubtitle>
+            <CardSubtitle>Los 5 libros con más comentarios en Bookex</CardSubtitle>
             <CardText>
               {this.listaPublicaciones(publicaciones)}
             </CardText>
@@ -128,9 +180,19 @@ export default class Stats extends Component {
       </li>);
     });
   }
+  listaCalificaciones (publicaciones) {
+    return publicaciones.map((n) => {
+      return (<li key={n._id}>
+        Nombre usuario : {n.username},
+        Calificación: {n.nota}
+      </li>);
+    });
+  }
   render () {
     return (
       <Row>
+        {this.usuarioNotaTop()}
+        {this.usuarioNotaNoTop()}
         {this.publicacionesNotaTop()}
         {this.publicacionesComentarioTop()}
         {this.publicacionesValorTop()}
@@ -142,5 +204,6 @@ export default class Stats extends Component {
 //Props del Home
 Stats.propTypes = {
   //Publicaciones
-  publicaciones: PropTypes.array
+  publicaciones: PropTypes.array,
+  calificaciones: PropTypes.array
 };

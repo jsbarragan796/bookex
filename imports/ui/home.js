@@ -13,6 +13,22 @@ import {
 export default class Home extends Component {
   constructor (props) {
     super(props);
+    this.darCalificacion = this.darCalificacion.bind(this);
+  }
+  darCalificacion (id) {
+    if (this.props.calificaciones.length > 0) {
+      function buscar (calificacion) {
+        return (calificacion.idUser === id);
+      }
+      let calificacion = this.props.calificaciones.find(buscar);
+      if (calificacion !== null && typeof calificacion !== "undefined") {
+        return this.getNota(calificacion.nota);
+      } else {
+        return this.getNota(0);
+      }
+    } else {
+      return this.getNota(0);
+    }
   }
 
   darChats () {
@@ -23,14 +39,20 @@ export default class Home extends Component {
         return (
           <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
             {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
+            {" - "}
+            {n.username1 === this.props.usuario.username ?
+              this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1) }
           </ListGroupItem>
         );
       });
     } else {
+      let n = this.props.chatSeleccionado;
       chats = (
         <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
           chatSeleccionado={this.props.chatSeleccionado}
-          mensajes= {this.props.notificaciones}/>
+          mensajes= {this.props.notificaciones} calificaciones={this.props.calificaciones}
+          calificacion={n.username1 === this.props.usuario.username ?
+            this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1)}/>
       );
     }
     return chats;
@@ -102,5 +124,6 @@ Home.propTypes = {
   desSeleccionarChat: PropTypes.func,
   chatSeleccionado: PropTypes.object,
   //Publicaciones
-  publicaciones: PropTypes.array
+  publicaciones: PropTypes.array,
+  calificaciones: PropTypes.array
 };

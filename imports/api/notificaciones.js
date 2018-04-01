@@ -59,15 +59,16 @@ Meteor.methods({
     Notificaciones.remove({ chatId: idChat });
     Chats.remove(idChat);
   },
-  "add.calificacion" (idUsurio2, nota, cantidad) {
+  "add.calificacion" (username, idUsurio2, nota, cantidad) {
     check(idUsurio2, String);
+    check(username, String);
     check(nota, Number);
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
     }
-    let obj = { idUser: idUsurio2, nota: nota, cantidad: cantidad };
+    let obj = { username: username, idUser: idUsurio2, nota: nota, cantidad: cantidad };
     // Publicaciones.update(idPublicacion, { $set: { nota: nota, comentarios: comentarios } });
-    Calificaciones.update(obj);
+    Calificaciones.update({ idUser: idUsurio2 }, obj, { upsert: true });
   },
 
 

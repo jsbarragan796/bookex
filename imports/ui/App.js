@@ -9,6 +9,7 @@ import { Meteor } from "meteor/meteor";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
 import { Publicaciones } from "../api/publicaciones.js";
+import { Calificaciones } from "../api/notificaciones.js";
 import { Jumbotron,
   Navbar,
   NavbarBrand,
@@ -111,8 +112,8 @@ class App extends Component {
         mensajes= {this.props.notificaciones} notificaciones={this.props.notificaciones}
         chats = {this.props.chats} seleccionarChat={this.seleccionarChat}
         desSeleccionarChat={this.desSeleccionarChat}
-        publicaciones={this.props.publicaciones} />
-    ) : <Stats publicaciones={this.props.publicaciones}/>;
+        publicaciones={this.props.publicaciones} calificaciones={this.props.calificaciones}/>
+    ) : <Stats publicaciones={this.props.publicaciones} calificaciones={this.props.calificaciones}/>;
     return (
       <div>
         <Navbar color="faded" light expand="md">
@@ -133,13 +134,15 @@ App.propTypes = {
   usuario: PropTypes.object,
   chats: PropTypes.array,
   notificaciones: PropTypes.array,
-  publicaciones: PropTypes.array
+  publicaciones: PropTypes.array,
+  calificaciones: PropTypes.array
 };
 
 export default withTracker(() => {
   Meteor.subscribe("notificaciones");
   Meteor.subscribe("chats");
   Meteor.subscribe("publicaciones");
+  Meteor.subscribe("calificaciones");
   let user = Meteor.user();
   if ((user !== null && typeof user !== "undefined") && (user.profile !== null && typeof user.profile !== "undefined")) {
     user.username = user.profile.name;
@@ -148,6 +151,7 @@ export default withTracker(() => {
     usuario: user,
     notificaciones: Notificaciones.find({}).fetch(),
     chats: Chats.find({}).fetch(),
-    publicaciones: Publicaciones.find({}).fetch()
+    publicaciones: Publicaciones.find({}).fetch(),
+    calificaciones: Calificaciones.find({}).fetch()
   };
 })(App);
