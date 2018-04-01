@@ -22,3 +22,8 @@ If anyone wants to give me any help or ideas, you can by making new [Issues](htt
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This repository has the standard MIT license. You can find it [here.](https://github.com/jsbarragan796/bookex/blob/master/LICENSE)
+
+
+[![License: CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/80x15.png)](https://creativecommons.org/licenses/by-sa/4.0/)
+
+The favicon was taken from [this site](https://www.freefavicon.com) under the creative commons license terms.

@@ -38,12 +38,41 @@ export default class Home extends Component {
     }
     return chats;
   }
+
   darPublicaciones () {
     let publicaciones = "";
     publicaciones = (
-      <Publicacion publicaciones={this.props.publicaciones} usuario={this.props.usuario}/>
+      <Publicacion
+        publicaciones={this.props.publicaciones}
+        usuario={this.props.usuario}
+        getNota={this.getNota}
+        />
     );
     return publicaciones;
+  }
+
+  RenderListaPub(){
+    let lista = "";
+    lista = (
+      <ListaPublicaciones
+        publicaciones={this.props.publicaciones}
+        usuario={this.props.usuario}
+        getNota={this.getNota}
+      />
+    );
+    return lista;
+  }
+
+  getNota(nota) {
+    let resp = "";
+    if(nota = 0 ){
+      resp = "Aun no hay puntuaciones 😢."
+    } else {
+      for (var i = 0; i < nota; i++) {
+        resp = resp + "⭐";
+      }
+    }
+    return resp;
   }
 
   render () {
@@ -65,7 +94,7 @@ export default class Home extends Component {
         </Col>
         <Col sm="9">
           {this.darPublicaciones()}
-          <ListaPublicaciones publicaciones={this.props.publicaciones} usuario={this.props.usuario} />
+          {this.RenderListaPub()}
         </Col>
       </Row>
     );

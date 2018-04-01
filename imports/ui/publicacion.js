@@ -40,12 +40,10 @@ export default class Publicacion extends Component {
     let publicaciones = this.props.publicaciones.filter((n) =>
       (n.ownerId === this.props.usuario._id)
     );
-    // const tam = (mensajes.length < 11) ? 0 : mensajes.length - 11;
-    // const tam = mensajes.length;
-    // mensajes = mensajes.slice(tam - 10);
+
     return publicaciones.map((n) => {
       return (
-        // mejorar interfaz !!
+        // Interfaz Simple para las publicaciones
         <div key={n._id}>
           <Media >
             <Media body>
@@ -61,13 +59,6 @@ export default class Publicacion extends Component {
         </div>
       );
     });
-  }
-  getNota (nota) {
-    let resp = "";
-    for (var i = 0; i < nota; i++) {
-      resp = resp + "⭐";
-    }
-    return resp;
   }
 
   renderizarPublicacion () {
@@ -96,7 +87,7 @@ export default class Publicacion extends Component {
             <br/>
             <strong> Valoracion: </strong>{publicacion.valorVenta}
             <br/>
-            <strong> Nota: </strong> {this.getNota(publicacion.nota)}
+            <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
           </CardText>
           <Button color="danger" onClick={this.eliminarPublicacion}>Eliminar</Button>
           <br/>
