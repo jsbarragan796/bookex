@@ -22,3 +22,5 @@ webapp
 accounts-ui
 accounts-password
 session
+accounts-google
+google-config-ui
