@@ -17,6 +17,7 @@ export default class Chat extends Component {
   constructor (props) {
     super(props);
     this.enviarMensaje = this.enviarMensaje.bind(this);
+    this.eliminarChat = this.eliminarChat.bind(this);
   }
 
   renderizarMensajes () {
@@ -39,6 +40,10 @@ export default class Chat extends Component {
       );
     });
   }
+  eliminarChat (idChat) {
+    Meteor.call("chat.remove", idChat);
+    this.props.salirChat();
+  }
 
   enviarMensaje (event) {
     event.preventDefault();
@@ -59,6 +64,10 @@ export default class Chat extends Component {
     return (
       <div>
         <Button onClick={this.props.salirChat} color="primary">Salir Chat</Button>
+        <Button
+          onClick={() => {this.eliminarChat(this.props.chatSeleccionado._id);}}
+          color="danger">Terminar Chat
+        </Button>
         {this.renderizarMensajes()}
         <br />
         <Form className="new-task" onSubmit={this.enviarMensaje} >

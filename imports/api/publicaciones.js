@@ -39,6 +39,15 @@ Meteor.methods({
       ownerName: Meteor.users.findOne(this.userId).username
     });
   },
+  "comentario.update" (idPublicacion, comentarios, nota) {
+    check(comentarios, Array);
+    check(idPublicacion, String);
+    check(nota, Number);
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+    Publicaciones.update(idPublicacion, { $set: { nota: nota, comentarios: comentarios } });
+  },
   "publicacion.remove" (idPublicacion) {
     check(idPublicacion, String);
     if (!this.userId) {

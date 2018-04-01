@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import PropTypes from "prop-types";
 import AccountsUIWrapper from "./AccountsUIWrapper.js";
+import Home from "./home.js";
+import Stats from "./stats.js";
 import { withTracker } from "meteor/react-meteor-data";
-import ReactDOM from "react-dom";
 import { Meteor } from "meteor/meteor";
 import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
@@ -14,7 +15,7 @@ import { Jumbotron,
   Nav,
   NavItem,
   NavLink } from "reactstrap";
-import Home from "./home.js";
+
 
 class App extends Component {
   constructor (props) {
@@ -24,7 +25,6 @@ class App extends Component {
       mensajes: [],
       enHome: true
     };
-    this.createChat = this.createChat.bind(this);
     this.seleccionarChat = this.seleccionarChat.bind(this);
     this.desSeleccionarChat = this.desSeleccionarChat.bind(this);
     this.cambioStats = this.cambioStats.bind(this);
@@ -43,14 +43,6 @@ class App extends Component {
       mensajes: []
     });
   }
-  createChat (event) {
-    event.preventDefault();
-    // Find the text field via the React ref
-    const idUser2 = ReactDOM.findDOMNode(this.refs.idUser2).value.trim();
-    Meteor.call("chat.insert", idUser2);
-    ReactDOM.findDOMNode(this.refs.idUser2).value = "";
-  }
-
   cambioStats () {
     this.setState({
       enHome: false
@@ -118,9 +110,9 @@ class App extends Component {
         chatSeleccionado={this.state.chatSeleccionado}
         mensajes= {this.props.notificaciones} notificaciones={this.props.notificaciones}
         chats = {this.props.chats} seleccionarChat={this.seleccionarChat}
-        createChat= {this.createChat} desSeleccionarChat={this.desSeleccionarChat}
+        desSeleccionarChat={this.desSeleccionarChat}
         publicaciones={this.props.publicaciones} />
-    ) : " ";
+    ) : <Stats publicaciones={this.props.publicaciones}/>;
     return (
       <div>
         <Navbar color="faded" light expand="md">
@@ -128,7 +120,7 @@ class App extends Component {
           <Nav className="ml-auto" navbar />
         </Navbar>
         <Jumbotron>
-          <h1> Bienvenido{usuario}</h1>
+          <h1> Bienvenido {usuario}</h1>
         </Jumbotron>
         {cuerpo}
       </div>
@@ -148,8 +140,12 @@ export default withTracker(() => {
   Meteor.subscribe("notificaciones");
   Meteor.subscribe("chats");
   Meteor.subscribe("publicaciones");
+  let user = Meteor.user();
+  if ((user !== null && typeof user !== "undefined") && (user.profile !== null && typeof user.profile !== "undefined")) {
+    user.username = user.profile.name;
+  }
   return {
-    usuario: Meteor.user(),
+    usuario: user,
     notificaciones: Notificaciones.find({}).fetch(),
     chats: Chats.find({}).fetch(),
     publicaciones: Publicaciones.find({}).fetch()

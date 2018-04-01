@@ -5,6 +5,7 @@ import { check } from "meteor/check";
 
 export const Notificaciones = new Mongo.Collection("notificaciones");
 export const Chats = new Mongo.Collection("chats");
+export const Calificaciones = new Mongo.Collection("calificaciones");
 
 if (Meteor.isServer) {
   // This code only runs on the server
@@ -15,6 +16,9 @@ if (Meteor.isServer) {
         { ownerId1: this.userId }
       ]
     });
+  });
+  Meteor.publish("calificaciones", function notificaciones () {
+    return Calificaciones.find({});
   });
   Meteor.publish("chats", function chatPublication () {
     return Chats.find({
@@ -47,17 +51,46 @@ Meteor.methods({
       username2: username2
     });
   },
-
-  "chat.insert" (ownerId2) {
-    check(ownerId2, String);
+  "chat.remove" (idChat) {
+    check(idChat, String);
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
     }
-    Chats.insert({
-      ownerId2,
-      ownerId1: this.userId,
-      username1: Meteor.users.findOne({ _id: this.userId }).username,
-      username2: Meteor.users.findOne({ _id: ownerId2 }).username
+    Notificaciones.remove({ chatId: idChat });
+    Chats.remove(idChat);
+  },
+  "add.calificacion" (idUsurio2, nota, cantidad) {
+    check(idUsurio2, String);
+    check(nota, Number);
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+    let obj = { idUser: idUsurio2, nota: nota, cantidad: cantidad };
+    // Publicaciones.update(idPublicacion, { $set: { nota: nota, comentarios: comentarios } });
+    Calificaciones.update(obj);
+  },
+
+
+  "chat.insert" (ownerId2, username2) {
+    check(ownerId2, String);
+    check(username2, String);
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+    let a = Chats.findOne({
+      $or: [
+        { ownerId1: this.userId, ownerId2: ownerId2 },
+        { ownerId2: this.userId, ownerId1: ownerId2 }
+      ]
     });
+
+    if (typeof a === "undefined" || a === null) {
+      Chats.insert({
+        ownerId2,
+        ownerId1: this.userId,
+        username1: Meteor.users.findOne(this.userId).username,
+        username2: username2
+      });
+    }
   }
 });

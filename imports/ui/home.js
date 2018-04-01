@@ -6,11 +6,8 @@ import ListaPublicaciones from "./listaPublicaciones.js";
 import {
   ListGroupItem,
   Row,
-  Col,
-  Button,
-  Form,
-  Label,
-  Input } from "reactstrap";
+  Col
+} from "reactstrap";
 
 
 export default class Home extends Component {
@@ -46,12 +43,12 @@ export default class Home extends Component {
         publicaciones={this.props.publicaciones}
         usuario={this.props.usuario}
         getNota={this.getNota}
-        />
+      />
     );
     return publicaciones;
   }
 
-  RenderListaPub(){
+  renderListaPub () {
     let lista = "";
     lista = (
       <ListaPublicaciones
@@ -63,10 +60,10 @@ export default class Home extends Component {
     return lista;
   }
 
-  getNota(nota) {
+  getNota (nota) {
     let resp = "";
-    if(nota === 0 ){
-      resp = "Aun no hay puntuaciones 😢."
+    if (nota === 0) {
+      resp = "Aun no hay puntuaciones 😢.";
     } else {
       for (var i = 0; i < nota; i++) {
         resp = resp + "⭐";
@@ -80,21 +77,12 @@ export default class Home extends Component {
       <Row>
         <Col sm="3">
           <h2>Tus Mensajes</h2>
-          <Form className="new-task" onSubmit={this.props.createChat} >
-            <Label for="idUser2">Temporal, colocar id usuario a contactar</Label>
-            <Input
-              id="idUser2"
-              type="text"
-              ref="idUser2"
-              placeholder="usuario 2 id"
-            />
-            <Button>Crear hilo chat</Button>
-          </Form>
+          <hr/>
           {this.darChats()}
         </Col>
         <Col sm="9">
           {this.darPublicaciones()}
-          {this.RenderListaPub()}
+          {this.renderListaPub()}
         </Col>
       </Row>
     );
@@ -111,7 +99,6 @@ Home.propTypes = {
   chats: PropTypes.array,
   salirChat: PropTypes.func,
   seleccionarChat: PropTypes.func,
-  createChat: PropTypes.func,
   desSeleccionarChat: PropTypes.func,
   chatSeleccionado: PropTypes.object,
   //Publicaciones
