@@ -33,8 +33,10 @@ export default class Stats extends Component {
           <CardBody>
             <CardTitle>Top 5  mejores usuarios</CardTitle>
             <CardSubtitle>Los 5 usuarios con mejores calificaciones en Bookex</CardSubtitle>
-            <CardText>
+            <CardText role="list">
+
               {this.listaCalificaciones(calificaciones)}
+
             </CardText>
           </CardBody>
         </Card>
@@ -59,8 +61,10 @@ export default class Stats extends Component {
           <CardBody>
             <CardTitle>Top 5 peores usuarios</CardTitle>
             <CardSubtitle>Los 5 usuarios con peores calificaciones en Bookex</CardSubtitle>
-            <CardText>
+            <CardText role="list">
+
               {this.listaCalificaciones(calificaciones)}
+
             </CardText>
           </CardBody>
         </Card>
@@ -85,8 +89,10 @@ export default class Stats extends Component {
           <CardBody>
             <CardTitle>Top 5 Publicaciones por nota</CardTitle>
             <CardSubtitle>Los 5 libros con mejores notas en Bookex</CardSubtitle>
-            <CardText>
+            <CardText role="list">
+
               {this.listaPublicaciones(publicaciones)}
+
             </CardText>
           </CardBody>
         </Card>
@@ -112,8 +118,10 @@ export default class Stats extends Component {
           <CardBody>
             <CardTitle>Top 5 Publicaciones mayor valor venta</CardTitle>
             <CardSubtitle>Los 5 libros con mayor valor en Bookex</CardSubtitle>
-            <CardText>
+            <CardText role="list">
+
               {this.listaPublicaciones(publicaciones)}
+
             </CardText>
           </CardBody>
         </Card>
@@ -138,8 +146,10 @@ export default class Stats extends Component {
           <CardBody>
             <CardTitle>Top 5 Publicaciones menor valor venta</CardTitle>
             <CardSubtitle>Los 5 libros con menor valor en Bookex</CardSubtitle>
-            <CardText>
+            <CardText role="list">
+
               {this.listaPublicaciones(publicaciones)}
+
             </CardText>
           </CardBody>
         </Card>
@@ -164,8 +174,10 @@ export default class Stats extends Component {
           <CardBody>
             <CardTitle>Top 5 Publicaciones por número comentarios</CardTitle>
             <CardSubtitle>Los 5 libros con más comentarios en Bookex</CardSubtitle>
-            <CardText>
+            <CardText role="list">
+
               {this.listaPublicaciones(publicaciones)}
+
             </CardText>
           </CardBody>
         </Card>

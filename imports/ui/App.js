@@ -92,9 +92,9 @@ class App extends Component {
     }
     return (
       <Nav navbar>
-        <NavbarBrand >Bookex</NavbarBrand>
+        <NavbarBrand role="listitem">Bookex</NavbarBrand>
         <NavItem>
-          <NavLink>
+          <NavLink >
             <AccountsUIWrapper />
           </NavLink>
         </NavItem>
