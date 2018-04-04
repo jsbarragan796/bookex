@@ -105,7 +105,8 @@ class App extends Component {
 
 
   render () {
-    const usuario = this.props.usuario ? ", " + this.props.usuario.username : " a Bookex";
+    //Se modifica el valor a retornar de la constante usuario
+    const usuario = this.props.usuario ? " " + this.props.usuario.username : " a Bookex";
     const cuerpo = this.state.enHome && this.props.usuario ? (
       <Home salirChat={this.desSeleccionarChat} usuario={this.props.usuario}
         chatSeleccionado={this.state.chatSeleccionado}
@@ -122,6 +123,10 @@ class App extends Component {
         </Navbar>
         <Jumbotron>
           <h1> Bienvenido {usuario}</h1>
+          {//Podría dar una descripción de la página y su funcionamiento. Falta entendimiento sobre las diferencias entre los tipos de calificaciones del chat y de la publicacion}
+          <p>
+            En Bookex podrás ...... Para ello, {this.props.usuario ? "Has esto y aquello y publica y algo más" :  "Ingresa o registrate a la página para podre X, Y y Z!"} 
+          </p>
         </Jumbotron>
         {cuerpo}
       </div>
