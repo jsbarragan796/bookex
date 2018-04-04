@@ -10,7 +10,8 @@ import {
   InputGroupAddon,
   Form,
   Label,
-  FormGroup } from "reactstrap";
+  FormGroup,
+  Card} from "reactstrap";
 
 
 export default class Chat extends Component {
@@ -90,13 +91,19 @@ export default class Chat extends Component {
   }
   render () {
     return (
-      <div>
+      <Card body>
+        {
+          //Seria util 'encapsular' el contenido del chat de una manera mas visible, como con un Card de Bootstrap
+        }
         <Button onClick={this.props.salirChat} color="primary">Salir Chat</Button>
         <Button
           onClick={() => {this.eliminarChat(this.props.chatSeleccionado._id);}} color="danger">
           Terminar Chat
         </Button>
         <h3>Calificacion del usuario: {this.props.calificacion}</h3>
+        {
+          //Se podria agregar a este componenete el nombre del usuario con quien se realiza el chat, con ayuda de props.usuario
+        }
         {this.renderizarMensajes()}
         <br />
         <Form className="new-task" onSubmit={this.enviarMensaje} >
@@ -132,7 +139,7 @@ export default class Chat extends Component {
             </InputGroup>
           </FormGroup>
         </Form>
-      </div>
+      </Card>
     );
   }
 }
