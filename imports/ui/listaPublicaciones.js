@@ -15,6 +15,10 @@ import {
   FormGroup
 } from "reactstrap";
 
+/*
+Podria utilizar paginacion para cuando haya demasiados comentarios o publicaciones
+*/
+
 export default class ListaPublicaciones extends Component {
   constructor (props) {
     super(props);
