@@ -10,18 +10,19 @@ import {
   InputGroupAddon,
   Form,
   Label,
-  FormGroup } from "reactstrap";
+  FormGroup
+} from "reactstrap";
 
 
 export default class Chat extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.enviarMensaje = this.enviarMensaje.bind(this);
     this.eliminarChat = this.eliminarChat.bind(this);
     this.calificar = this.calificar.bind(this);
   }
 
-  renderizarMensajes () {
+  renderizarMensajes() {
     let mensajes = this.props.mensajes.filter((n) =>
       (n.chatId === this.props.chatSeleccionado._id)
     );
@@ -41,26 +42,35 @@ export default class Chat extends Component {
       );
     });
   }
-  eliminarChat (idChat) {
+  eliminarChat(idChat) {
     Meteor.call("chat.remove", idChat);
     this.props.salirChat();
   }
 
-  enviarMensaje (event) {
+  enviarMensaje(event) {
     event.preventDefault();
     // Find the text field via the React ref
     const text = ReactDOM.findDOMNode(this.refs.mensaje).value.trim();
-    const ownerId2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
-      this.props.chatSeleccionado.ownerId1 : this.props.chatSeleccionado.ownerId2;
-    const name2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
-      this.props.chatSeleccionado.username1 : this.props.chatSeleccionado.username2;
-    const chatId = this.props.chatSeleccionado._id;
-    Meteor.call("noti.insert", text, ownerId2, chatId, name2, this.props.usuario.username);
-    // this.props.enviarMensaje(text, ownerId2, chatId, name2);
 
-    ReactDOM.findDOMNode(this.refs.mensaje).value = "";
+    /*
+     Only inserts the message if the text has a content and is not
+     and empty string 
+    */
+    if (text !== "") {
+      const ownerId2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
+        this.props.chatSeleccionado.ownerId1 : this.props.chatSeleccionado.ownerId2;
+      const name2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
+        this.props.chatSeleccionado.username1 : this.props.chatSeleccionado.username2;
+      const chatId = this.props.chatSeleccionado._id;
+
+      // Sends the message to the db
+      Meteor.call("noti.insert", text, ownerId2, chatId, name2, this.props.usuario.username);
+
+      // Cleans the chat
+      ReactDOM.findDOMNode(this.refs.mensaje).value = "";
+    }
   }
-  calificar (event) {
+  calificar(event) {
     event.preventDefault();
     // Find the text field via the React ref
     const calificacion = Number(ReactDOM.findDOMNode(this.refs.calificacion).value.trim());
@@ -71,7 +81,7 @@ export default class Chat extends Component {
     let c = 0;
     let n = 0;
     if (this.props.calificaciones.length > 0) {
-      function buscar (calificacion) {
+      function buscar(calificacion) {
         return (calificacion.idUser === ownerId2);
       }
       let cal = this.props.calificaciones.find(buscar);
@@ -88,12 +98,12 @@ export default class Chat extends Component {
 
     ReactDOM.findDOMNode(this.refs.calificacion).value = 1;
   }
-  render () {
+  render() {
     return (
       <div>
         <Button onClick={this.props.salirChat} color="primary">Salir Chat</Button>
         <Button
-          onClick={() => {this.eliminarChat(this.props.chatSeleccionado._id);}} color="danger">
+          onClick={() => { this.eliminarChat(this.props.chatSeleccionado._id); }} color="danger">
           Terminar Chat
         </Button>
         <h3>Calificacion del usuario: {this.props.calificacion}</h3>
@@ -115,7 +125,7 @@ export default class Chat extends Component {
             </InputGroup>
           </FormGroup>
         </Form>
-        <hr/>
+        <hr />
         <h3>Calificar usuario</h3>
         <Form className="new-2" onSubmit={this.calificar}>
           <FormGroup>

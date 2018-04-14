@@ -33,24 +33,35 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   "noti.insert" (text, ownerId2, chatId, username2, username1) {
+
+    // Only logged in users can use this method
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    // Validate the inputs of the method
     check(text, String);
     check(ownerId2, String);
     check(chatId, String);
     check(username2, String);
     check(username1, String);
-    if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+
+    //trims the message just in case
+    text = text.trim();
+
+    // Only insert messages if the text is not empty
+    if (text !== ""){
+      Notificaciones.insert({
+        chatId,
+        text,
+        ownerId2,
+        createdAt: new Date(),
+        ownerId1: this.userId,
+        username1: username1,
+        username2: username2
+      });
     }
 
-    Notificaciones.insert({
-      chatId,
-      text,
-      ownerId2,
-      createdAt: new Date(),
-      ownerId1: this.userId,
-      username1: username1,
-      username2: username2
-    });
   },
   "chat.remove" (idChat) {
     check(idChat, String);
