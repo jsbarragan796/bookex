@@ -13,8 +13,12 @@ import {
   Form,
   Label,
   FormGroup,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
   InputGroupAddon
 } from "reactstrap";
+import { isNull } from "util";
 
 export default class ListaPublicaciones extends Component {
   constructor (props) {
@@ -22,8 +26,11 @@ export default class ListaPublicaciones extends Component {
     this.state = {
       crearPublicacion: false,
       publicacionSelected: null,
-      busqueda: ""
+      busqueda: "",
+      page: 0
+
     };
+    this.updatePagination = this.updatePagination.bind(this);
     this.seleccionarPublicacion = this.seleccionarPublicacion.bind(this);
     this.desSeleccionarPublicacion = this.desSeleccionarPublicacion.bind(this);
     this.crearComentario = this.crearComentario.bind(this);
@@ -34,7 +41,6 @@ export default class ListaPublicaciones extends Component {
     event.preventDefault();
     // Find the text field via the React ref
     const text = ReactDOM.findDOMNode(this.refs.busqueda).value.trim();
-
     /*
     Solo busqueda si solo se ha introducido algo
     */
@@ -83,12 +89,75 @@ export default class ListaPublicaciones extends Component {
     this.desSeleccionarPublicacion();
   }
 
+  updatePagination (pagina, fin) {
+    // updates only if the new page is different from the actual page
+    if (this.state.page !== pagina) {
+      let nextPage = null; //the number on the new page
+      let actual = this.state.page; //the current page
+
+      // calculates the new page
+      if (pagina === "next" && actual + 1 < fin) nextPage = actual + 1;
+      if (pagina === "prev" && actual > 0) nextPage = actual - 1;
+      if (!isNaN(pagina)) nextPage = pagina;
+
+      // updates if there was a page calculated
+      if (!isNull(nextPage)) {
+        //Updates the state with the new page
+        this.setState({ page: nextPage });
+      }
+    }
+  }
+
+  // this renders the pagination
+  renderPagination (tam) {
+    // Calculates the number of pages
+    let pages = Math.floor(tam / 9);
+    pages = tam % 9 !== 0 ? pages + 1 : pages;
+    // Calculates the current page
+    const currentPage = this.state.page;
+    // Checks if the user is in the last page or not
+    const end = pages === currentPage + 1;
+    // Checks if the user is on the first page or not
+    const start = currentPage === 0;
+    // The array of pagination items
+    let items = Array(pages);
+    for (let index = 0; index < items.length; index++) {
+      items[index] = (
+        <PaginationItem
+          onClick={() => this.updatePagination(index)}
+          key={index}
+          active={index === currentPage}>
+          <PaginationLink>
+            {index + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    return (
+      <Pagination>
+        <PaginationItem
+          onClick={() => this.updatePagination("prev")}
+          disabled={start} >
+          <PaginationLink previous />
+        </PaginationItem>
+        {items}
+        <PaginationItem
+          onClick={() => this.updatePagination("next", items.length)}
+          disabled={end} >
+          <PaginationLink next />
+        </PaginationItem>
+      </Pagination>
+    );
+  }
+
   renderizarPublicaciones () {
     let resp = "";
+
     if (this.state.publicacionSelected === null) {
       let publicaciones = this.props.publicaciones.filter((n) =>
         (n.ownerId !== this.props.usuario._id)
       );
+
       if (this.state.busqueda !== "") {
         publicaciones = publicaciones.filter((n) =>
           (n.autores.toLowerCase().includes(this.state.busqueda.toLowerCase()) ||
@@ -97,6 +166,16 @@ export default class ListaPublicaciones extends Component {
            n.editorial.toLowerCase().includes(this.state.busqueda.toLowerCase()))
         );
       }
+      let tam = publicaciones.length;
+      // Creates the boundary of the publications
+      let inicio = this.state.page * 9;
+      let fin = inicio + 8;
+      // Filters all publications based on the range and owner
+      publicaciones = publicaciones.filter((n, i) =>
+        (inicio <= i && i <= fin)
+      );
+
+      // Makes the card for every publication
       resp = publicaciones.map((publicacion) => {
         return (
           <Col sm="4" key={publicacion._id}>
@@ -124,7 +203,7 @@ export default class ListaPublicaciones extends Component {
                   <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
                 </CardText>
                 <Button
-                  onClick= {() => {this.createChat(publicacion.ownerId, publicacion.ownerName);}}
+                  onClick={() => { this.createChat(publicacion.ownerId, publicacion.ownerName); }}
                   color="primary" >Contactar a {publicacion.ownerName}
                 </Button>
                 <Button color="primary"
@@ -139,7 +218,15 @@ export default class ListaPublicaciones extends Component {
           </Col>
         );
       });
-      resp = (<Row>{resp}</Row>);
+
+      //wraps the resp on the appropiate component
+      resp = (
+        <div>
+          <Row>{resp}</Row>
+          <br />
+          {this.renderPagination(tam)}
+        </div>
+      );
     } else {
       resp = this.state.publicacionSelected.comentarios.map((n, i) => {
         return (
