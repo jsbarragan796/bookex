@@ -12,7 +12,9 @@ div.row {
   margin-left: 1vw;
   margin-right: 1vw;
 }
-
+.abajo{
+  margin-top: 1vmax;
+}
 .main {
   background-color: #ededed;
   color: #002244;

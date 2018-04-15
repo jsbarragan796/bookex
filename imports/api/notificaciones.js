@@ -1,7 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import { check } from "meteor/check";
-
+import { DDPRateLimiter } from "meteor/ddp-rate-limiter";
 
 export const Notificaciones = new Mongo.Collection("notificaciones");
 export const Chats = new Mongo.Collection("chats");
@@ -28,6 +28,18 @@ if (Meteor.isServer) {
       ]
     });
   });
+  //limitador de solicitudes
+  var requestLimit = 1;
+  var requestTimeout = 2000;
+
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "noti.insert"
+  }, 5, 2000);
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "add.calificacion"
+  }, requestLimit, requestTimeout);
 }
 
 
@@ -101,9 +113,7 @@ Meteor.methods({
         ownerId2,
         ownerId1: this.userId,
         username1: username1,
-        username2: username2,
-        username1Califico: false,
-        username2Califico: false
+        username2: username2
       });
     }
   }

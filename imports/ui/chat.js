@@ -10,16 +10,35 @@ import {
   InputGroupAddon,
   Form,
   Label,
-  FormGroup
+  FormGroup,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter
 } from "reactstrap";
-
 
 export default class Chat extends Component {
   constructor (props) {
     super(props);
+    this.state = {
+      visibleModal: false,
+      mensaje: ""
+    };
     this.enviarMensaje = this.enviarMensaje.bind(this);
     this.eliminarChat = this.eliminarChat.bind(this);
     this.calificar = this.calificar.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onMostrar = this.onMostrar.bind(this);
+  }
+  onMostrar (nombreChat) {
+    let msg = "Antes de terminar debes calificar a " + nombreChat + ".";
+    this.setState({
+      mensaje: msg,
+      visibleModal: true });
+  }
+
+  onDismiss () {
+    this.setState({ visibleModal: false });
   }
 
   renderizarMensajes () {
@@ -64,7 +83,9 @@ export default class Chat extends Component {
       const chatId = this.props.chatSeleccionado._id;
 
       // Sends the message to the db
+
       Meteor.call("noti.insert", text, ownerId2, chatId, name2, this.props.usuario.username);
+
 
       // Cleans the chat
       ReactDOM.findDOMNode(this.refs.mensaje).value = "";
@@ -95,15 +116,40 @@ export default class Chat extends Component {
     n = n / (c + 1);
     Meteor.call("add.calificacion", name2, ownerId2, n, c + 1);
     // this.props.enviarMensaje(text, ownerId2, chatId, name2);
-
+    this.eliminarChat(this.props.chatSeleccionado._id);
+    this.onDismiss();
     ReactDOM.findDOMNode(this.refs.calificacion).value = 1;
   }
   render () {
     return (
       <div>
+        <Modal isOpen={this.state.visibleModal} toggle={this.onDismiss} className="Notificacion">
+          <ModalHeader toggle={this.onDismiss}>Advertencia</ModalHeader>
+          <ModalBody>
+            <h4>{this.state.mensaje}</h4>
+            <Form className="new-2" onSubmit={this.calificar}>
+              <FormGroup>
+                <InputGroup>
+                  <Input className="abajo" type="select" name="calificacion" id="calificacion" ref="calificacion">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </Input>
+                  <Button className="abajo" color="success">Calificar</Button>
+                </InputGroup>
+              </FormGroup>
+            </Form>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" onClick={this.onDismiss}>Cancelar</Button>
+          </ModalFooter>
+        </Modal>
         <Button onClick={this.props.salirChat} color="primary">Salir Chat</Button>
+        {"  "}
         <Button
-          onClick={() => { this.eliminarChat(this.props.chatSeleccionado._id); }} color="danger">
+          onClick={() => {this.onMostrar(this.props.nombreChat);}} color="danger">
           Terminar Chat
         </Button>
         <h3>Calificacion del usuario: {this.props.calificacion}</h3>
@@ -125,23 +171,6 @@ export default class Chat extends Component {
             </InputGroup>
           </FormGroup>
         </Form>
-        <hr />
-        <h3>Calificar usuario</h3>
-        <Form className="new-2" onSubmit={this.calificar}>
-          <FormGroup>
-            <InputGroup>
-              <Label for="calificacion">Nota: </Label>
-              <Input type="select" name="calificacion" id="calificacion" ref="calificacion">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </Input>
-              <Button color="success">Calificar</Button>
-            </InputGroup>
-          </FormGroup>
-        </Form>
       </div>
     );
   }
@@ -154,5 +183,6 @@ Chat.propTypes = {
   salirChat: PropTypes.func,
   mensajes: PropTypes.array,
   calificaciones: PropTypes.array,
-  calificacion: PropTypes.string
+  calificacion: PropTypes.string,
+  nombreChat: PropTypes.string
 };

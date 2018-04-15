@@ -91,7 +91,7 @@ export default class Publicacion extends Component {
     }
     let resp = elementosOwner.map((elemento, i) => {
       return (
-        <Col sm="4" key={i}>
+        <Col sm="4" key={i} className="abajo">
           <Card>
             <CardBody>
               <CardTitle>{publicacion.titulo}</CardTitle>
@@ -119,22 +119,17 @@ export default class Publicacion extends Component {
     const publicacion = this.state.publicacionSelected;
     return (
       <div>
-        <Row>
-          <Col sm="2">
-            <p>
-              <strong> Editorial: </strong>{publicacion.autores}
-              <br/>
-              <strong> Edición: </strong>{publicacion.edicion}
-              <br/>
-              <strong> Genero: </strong>{publicacion.genero}
-              <br/>
-              <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
-            </p>
-          </Col>
-          <div>
-            <Button onClick={this.desSeleccionarPublicacion} color="success">Atrás</Button>
-          </div>
-        </Row>
+
+        <strong> Editorial: </strong>{publicacion.autores}
+        <br/>
+        <strong> Edición: </strong>{publicacion.edicion}
+        <br/>
+        <strong> Genero: </strong>{publicacion.genero}
+        <br/>
+        <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
+
+        <Button onClick={this.desSeleccionarPublicacion} color="success">Regresar</Button>
+
         <Row>
           {this.darElementosOwner(publicacion)}
         </Row>
@@ -247,69 +242,89 @@ export default class Publicacion extends Component {
   }
   nuevaPublicacion (deshabilitar) {
     return (<div>
-      <h1>Publicación a crear</h1>
+      <h1>Completa para agregar un libro</h1>
       <Form className="new-Publicacion" onSubmit={this.agregarPublicacion} >
-        <FormGroup>
-          <Label for="titulo">Titulo: </Label>
-          <Input
-            id="titulo"
-            type="text"
-            ref="titulo"
-            placeholder="Escribe el titulo"
-            disabled = {deshabilitar}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="autores"> Autor(es): </Label>
-          <Input
-            id="autores"
-            type="text"
-            ref="autores"
-            placeholder="Escribe autor (es)"
-            disabled = {deshabilitar}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="editorial"> Editorial: </Label>
-          <Input
-            id="editorial"
-            type="text"
-            ref="editorial"
-            placeholder="Escribe la editorial"
-            disabled = {deshabilitar}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="edicion">Edicion</Label>
-          <Input type="select" name="edicion" id="edicion" ref="edicion" disabled = {deshabilitar}>
-            {this.darAnios()}
-          </Input>
-        </FormGroup>
-        <FormGroup>
-          <Label for="genero">Género</Label>
-          <Input type="select" name="genero" id="genero" ref="genero" disabled = {deshabilitar}>
-            {this.darGeneros()}
-          </Input>
-        </FormGroup>
-        <FormGroup>
-          <Label for="estado">Estado</Label>
-          <Input type="select" name="estado" id="estado" ref="estado">
-            <option>Malo</option>
-            <option>Regular</option>
-            <option>Aceptable</option>
-            <option>Excelente</option>
-          </Input>
-        </FormGroup>
-        <FormGroup>
-          <Label for="para">Intención de la publicación</Label>
-          <Input type="select" name="para" id="para" ref="para">
-            <option>Regalar</option>
-            <option>Vender</option>
-            <option>Cambiar</option>
-          </Input>
-        </FormGroup>
-        <Button color="primary">Crear</Button>
-        <Button onClick={this.cambioVista} color="danger">Cancelar</Button>
+        <Row>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="titulo">Titulo: </Label>
+              <Input
+                id="titulo"
+                type="text"
+                ref="titulo"
+                placeholder="Escribe el titulo"
+                disabled = {deshabilitar}
+              />
+            </FormGroup>
+          </Col>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="autores"> Autor(es): </Label>
+              <Input
+                id="autores"
+                type="text"
+                ref="autores"
+                placeholder="Escribe autor (es)"
+                disabled = {deshabilitar}
+              />
+            </FormGroup>
+          </Col>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="editorial"> Editorial: </Label>
+              <Input
+                id="editorial"
+                type="text"
+                ref="editorial"
+                placeholder="Escribe la editorial"
+                disabled = {deshabilitar}
+              />
+            </FormGroup>
+          </Col>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="edicion">Edicion</Label>
+              <Input type="select" name="edicion" id="edicion" ref="edicion" disabled = {deshabilitar}>
+                {this.darAnios()}
+              </Input>
+            </FormGroup>
+          </Col>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="genero">Género</Label>
+              <Input type="select" name="genero" id="genero" ref="genero" disabled = {deshabilitar}>
+                {this.darGeneros()}
+              </Input>
+            </FormGroup>
+          </Col>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="estado">Estado</Label>
+              <Input type="select" name="estado" id="estado" ref="estado">
+                <option>Malo</option>
+                <option>Regular</option>
+                <option>Aceptable</option>
+                <option>Excelente</option>
+              </Input>
+            </FormGroup>
+          </Col>
+          <Col sm="4">
+            <FormGroup>
+              <Label for="para">Intención de la publicación</Label>
+              <Input type="select" name="para" id="para" ref="para">
+                <option>Regalar</option>
+                <option>Vender</option>
+                <option>Cambiar</option>
+              </Input>
+            </FormGroup>
+          </Col>
+          <Col sm="12">
+            <Button color="primary">Crear</Button>
+            {"  "}
+            <Button onClick={this.cambioVista} color="danger">Cancelar</Button>
+          </Col>
+        </Row>
+
       </Form>
     </div>);
   }

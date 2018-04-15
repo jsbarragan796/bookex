@@ -25,3 +25,4 @@ session
 accounts-google
 google-config-ui
 meteortesting:mocha
+ddp-rate-limiter

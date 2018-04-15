@@ -85,19 +85,21 @@ export default class Home extends Component {
   }
 
   darChats () {
-    let chats = this.props.chats.map((n, i) => {
-      return (
-        <Col sm="4" key={i}>
-          <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
-            {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
-            {" - "}
-            {n.username1 === this.props.usuario.username ?
-              this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1) }
-          </ListGroupItem>
-        </Col>
-      );
-    });
-
+    let chats = "No tienes chats 😢";
+    if (this.props.chats.length > 0) {
+      chats = this.props.chats.map((n, i) => {
+        return (
+          <Col sm="4" key={i}>
+            <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
+              {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
+              {" - "}
+              {n.username1 === this.props.usuario.username ?
+                this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1) }
+            </ListGroupItem>
+          </Col>
+        );
+      });
+    }
     if (this.props.chatSeleccionado !== null &&
     typeof this.props.chats !== "undefined") {
       let n = this.props.chatSeleccionado;
@@ -109,7 +111,8 @@ export default class Home extends Component {
               chatSeleccionado={this.props.chatSeleccionado}
               mensajes= {this.props.notificaciones} calificaciones={this.props.calificaciones}
               calificacion={n.username1 === this.props.usuario.username ?
-                this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1)}/>
+                this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1)}
+              nombreChat={n.username1 === this.props.usuario.username ? n.username2 : n.username1}/>
           </Col>
         </Row>);
     }
@@ -198,7 +201,7 @@ export default class Home extends Component {
           <TabPane tabId="1">
             <Row>
               <Col sm="12">
-                <h4>Tus mensajes</h4>
+                <h1>Tus mensajes</h1>
                 {this.darChats()}
               </Col>
             </Row>

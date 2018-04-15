@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import { check } from "meteor/check";
+import { DDPRateLimiter } from "meteor/ddp-rate-limiter";
 
 export const Publicaciones = new Mongo.Collection("libros");
 export const Comentarios = new Mongo.Collection("Comentarios");
@@ -13,6 +14,31 @@ if (Meteor.isServer) {
   Meteor.publish("comentarios", function () {
     return Comentarios.find({});
   });
+
+  //limitador de solicitudes
+  var requestLimit = 1;
+  var requestTimeout = 10000;
+
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "publicacion.insert"
+  }, requestLimit, requestTimeout);
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "comentario.insert"
+  }, requestLimit, requestTimeout);
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "comentario.update"
+  }, requestLimit, requestTimeout);
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "publicacion.update.elementos"
+  }, requestLimit, requestTimeout);
+  DDPRateLimiter.addRule({
+    type: "method",
+    name: "publicacion.remove"
+  }, requestLimit, requestTimeout);
 }
 
 

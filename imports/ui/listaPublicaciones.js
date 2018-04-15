@@ -87,7 +87,11 @@ export default class ListaPublicaciones extends Component {
     Meteor.call("comentario.update", this.state.publicacionSelected._id, nuevosComentarios, nuevaNota);
     ReactDOM.findDOMNode(this.refs.comentario).value = "";
     ReactDOM.findDOMNode(this.refs.nota).value = 1;
-    // this.desSeleccionarPublicacion();
+    const nueva = this.state.publicacionSelected;
+    nueva.comentarios = nuevosComentarios;
+    this.setState({
+      publicacionSelected: nueva
+    });
   }
 
   updatePagination (pagina, fin) {
@@ -135,19 +139,21 @@ export default class ListaPublicaciones extends Component {
       );
     }
     return (
-      <Pagination>
-        <PaginationItem
-          onClick={() => this.updatePagination("prev")}
-          disabled={start} >
-          <PaginationLink previous />
-        </PaginationItem>
-        {items}
-        <PaginationItem
-          onClick={() => this.updatePagination("next", items.length)}
-          disabled={end} >
-          <PaginationLink next />
-        </PaginationItem>
-      </Pagination>
+      <Col className="abajo" sm="12">
+        <Pagination>
+          <PaginationItem
+            onClick={() => this.updatePagination("prev")}
+            disabled={start} >
+            <PaginationLink previous />
+          </PaginationItem>
+          {items}
+          <PaginationItem
+            onClick={() => this.updatePagination("next", items.length)}
+            disabled={end} >
+            <PaginationLink next />
+          </PaginationItem>
+        </Pagination>
+      </Col>
     );
   }
   darElementosNoOwner (publicacion) {
@@ -233,6 +239,7 @@ export default class ListaPublicaciones extends Component {
                 <Button color="primary"
                   onClick={() => this.seleccionarPublicacion(publicacion)}>Ver detalle
                 </Button>
+                {"  "}
                 <Button color="primary"
                   onClick={() => this.props.publicacionExSelecionada(publicacion)} > Añade uno
                 </Button>
@@ -245,9 +252,32 @@ export default class ListaPublicaciones extends Component {
       //wraps the resp on the appropiate component
       resp = (
         <div>
-          <Row>{resp}</Row>
-          <br />
-          {this.renderPagination(tam)}
+          <Row>
+            <Col sm="6">
+              <Form className="new-task" onSubmit={this.buscar} onChange={this.buscar} >
+                <FormGroup>
+                  <Label for="busqueda">Búsqueda</Label>
+                  <InputGroup>
+                    <Input
+                      id="busqueda"
+                      type="text"
+                      ref="busqueda"
+                      placeholder="Busca por autor, título, género o editorial"
+                    />
+                    <InputGroupAddon addonType="append">
+                      <Button color="secondary">Buscar</Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormGroup>
+              </Form>
+            </Col>
+            <Col sm="12">
+              {""}
+            </Col>
+            {resp}
+            <br/>
+            {this.renderPagination(tam)}
+          </Row>
         </div>
       );
     } else {
@@ -256,7 +286,7 @@ export default class ListaPublicaciones extends Component {
       //Renderizar comentarios
       let resp2 = this.state.publicacionSelected.comentarios.map((n, i) => {
         return (
-          <Col sm="4" key={i}>
+          <Col className="abajo" sm="4" key={i}>
             <Card>
               <CardBody>
                 <CardTitle>Usuario: {n.username}</CardTitle>
@@ -286,11 +316,15 @@ export default class ListaPublicaciones extends Component {
           <strong> Editorial: </strong>{this.state.publicacionSelected.editorial}
           <br />
           <strong> Nota: </strong> {this.props.getNota(this.state.publicacionSelected.nota)}
-          <Button onClick={this.desSeleccionarPublicacion} color="secondary">Regresar</Button>
-          <Row>
+          <Button onClick={this.desSeleccionarPublicacion} color="success">Regresar</Button>
+          <Row className="abajo">
             {resp}
           </Row>
-          <Row>
+          <hr/>
+          <Row className="abajo">
+            <Col className="abajo" sm="12">
+              <h2>Añade tu comentario y nota sobre este libro</h2>
+            </Col>
             <Col sm="4">
               <Form className="new-comentario" onSubmit={this.crearComentario} >
                 <Card>
@@ -327,7 +361,11 @@ export default class ListaPublicaciones extends Component {
               </Form>
             </Col>
           </Row>
-          <Row>
+          <hr/>
+          <Row >
+            <Col className="abajo" sm="12">
+              <h2>Comentarios </h2>
+            </Col>
             {resp2}
           </Row>
         </div>
@@ -338,22 +376,6 @@ export default class ListaPublicaciones extends Component {
   render () {
     return (<div>
       <h1>Publicaciones</h1>
-      <Form className="new-task" onSubmit={this.buscar} onChange={this.buscar} >
-        <FormGroup>
-          <Label for="busqueda">Búsqueda</Label>
-          <InputGroup>
-            <Input
-              id="busqueda"
-              type="text"
-              ref="busqueda"
-              placeholder="Busca por autor, título, género o editorial"
-            />
-            <InputGroupAddon addonType="append">
-              <Button color="secondary">Buscar</Button>
-            </InputGroupAddon>
-          </InputGroup>
-        </FormGroup>
-      </Form>
       {this.renderizarPublicaciones()}
     </div>);
   }

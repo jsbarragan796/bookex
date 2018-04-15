@@ -195,11 +195,12 @@ export default class Stats extends Component {
   listaCalificaciones (publicaciones) {
     return publicaciones.map((n) => {
       return (
-      <li key={n._id}>
-        Nombre usuario: {n.username},
-        Calificación: {Math.trunc(n.nota * 100)/100 /*evil hack to get a whole number or the fisrt 2 decimal digits*/}
-      </li>
-    );
+        <li key={n._id}>
+          Nombre usuario: {n.username},
+          Calificación: {Math.trunc(n.nota * 100) / 100
+          /*evil hack to get a whole number or the fisrt 2 decimal digits*/}
+        </li>
+      );
     });
   }
   render () {
