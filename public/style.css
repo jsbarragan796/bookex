@@ -4,6 +4,9 @@
     src: url("/SIFONN_PRO.woff") format('woff');
 }
 
+body{
+  background-color: #ededed;
+}
 
 div.row {
   margin-left: 1vw;
@@ -172,4 +175,7 @@ Simple and easy method to do this,
 }
 .help{
  text-align:center
+}
+.tumenu{
+  padding-top: 3%;
 }

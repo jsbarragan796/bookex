@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Chat from "./chat.js";
 import Publicacion from "./publicacion.js";
 import ListaPublicaciones from "./listaPublicaciones.js";
+import classnames from "classnames";
 import {
   ListGroupItem,
   Row,
@@ -11,7 +12,12 @@ import {
   Button,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  Nav,
+  NavLink,
+  NavItem,
+  TabContent,
+  TabPane
 } from "reactstrap";
 
 
@@ -21,13 +27,22 @@ export default class Home extends Component {
     this.state = {
       visibleModal: false,
       mensaje: "",
-      publicacionExSel: null
+      publicacionExSel: null,
+      activeTab: "1"
     };
     this.onDismiss = this.onDismiss.bind(this);
     this.onMostrar = this.onMostrar.bind(this);
     this.darCalificacion = this.darCalificacion.bind(this);
     this.publicacionExSelecionada = this.publicacionExSelecionada.bind(this);
     this.quitarPublicacion = this.quitarPublicacion.bind(this);
+    this.toggle = this.toggle.bind(this);
+  }
+  toggle (tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
   }
   onMostrar (msg) {
     this.setState({
@@ -46,6 +61,7 @@ export default class Home extends Component {
       publicacion.titulo + ", ve a la seccion de tus publicaciones y termina de completar el formulario",
       visibleModal: true
     });
+    this.toggle("2");
   }
   quitarPublicacion () {
     this.setState({
@@ -69,28 +85,33 @@ export default class Home extends Component {
   }
 
   darChats () {
-    let chats = "";
-    if (this.props.chatSeleccionado === null &&
-    typeof this.props.chats !== "undefined") {
-      chats = this.props.chats.map((n, i) => {
-        return (
+    let chats = this.props.chats.map((n, i) => {
+      return (
+        <Col sm="4" key={i}>
           <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
             {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
             {" - "}
             {n.username1 === this.props.usuario.username ?
               this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1) }
           </ListGroupItem>
-        );
-      });
-    } else {
+        </Col>
+      );
+    });
+
+    if (this.props.chatSeleccionado !== null &&
+    typeof this.props.chats !== "undefined") {
       let n = this.props.chatSeleccionado;
       chats = (
-        <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
-          chatSeleccionado={this.props.chatSeleccionado}
-          mensajes= {this.props.notificaciones} calificaciones={this.props.calificaciones}
-          calificacion={n.username1 === this.props.usuario.username ?
-            this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1)}/>
-      );
+        <Row>
+          {chats}
+          <Col sm="8">
+            <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
+              chatSeleccionado={this.props.chatSeleccionado}
+              mensajes= {this.props.notificaciones} calificaciones={this.props.calificaciones}
+              calificacion={n.username1 === this.props.usuario.username ?
+                this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1)}/>
+          </Col>
+        </Row>);
     }
     return chats;
   }
@@ -139,7 +160,7 @@ export default class Home extends Component {
     return (
       <div>
         <Modal isOpen={this.state.visibleModal} toggle={this.onDismiss} className="Notificacion">
-          <ModalHeader toggle={this.toggle}>Notificación</ModalHeader>
+          <ModalHeader toggle={this.onDismiss}>Notificación</ModalHeader>
           <ModalBody>
             {this.state.mensaje}
           </ModalBody>
@@ -147,17 +168,56 @@ export default class Home extends Component {
             <Button color="secondary" onClick={this.onDismiss}>Aceptar</Button>
           </ModalFooter>
         </Modal>
-        <Row>
-          <Col sm="3">
-            <h2>Tus Mensajes</h2>
-            <hr/>
-            {this.darChats()}
-          </Col>
-          <Col sm="9">
-            {this.darPublicaciones()}
-            {this.renderListaPub()}
-          </Col>
-        </Row>
+        <Nav tabs>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === "1" })}
+              onClick={() => { this.toggle("1"); }}
+            >
+              Tus mensajes
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === "2" })}
+              onClick={() => { this.toggle("2"); }}
+            >
+              Tus Publicaciones
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === "3" })}
+              onClick={() => { this.toggle("3"); }}
+            >
+              Publicaciones
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={this.state.activeTab}>
+          <TabPane tabId="1">
+            <Row>
+              <Col sm="12">
+                <h4>Tus mensajes</h4>
+                {this.darChats()}
+              </Col>
+            </Row>
+          </TabPane>
+          <TabPane tabId="2">
+            <Row>
+              <Col sm="12">
+                {this.darPublicaciones()}
+              </Col>
+            </Row>
+          </TabPane>
+          <TabPane tabId="3">
+            <Row>
+              <Col sm="12">
+                {this.renderListaPub()}
+              </Col>
+            </Row>
+          </TabPane>
+        </TabContent>
       </div>
     );
   }

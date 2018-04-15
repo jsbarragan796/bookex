@@ -134,7 +134,9 @@ class App extends Component {
     return (
       <div>
         {this.renderNav(usuario)}
-        {cuerpo}
+        <div className="tumenu">
+          {cuerpo}
+        </div>
       </div>
     );
   }

@@ -67,8 +67,10 @@ export default class Publicacion extends Component {
               <Media heading>
                 Titulo: {n.titulo}
               </Media>
-              Autor: {n.autores}
-              Editorial:  {n.editorial}
+              <strong>Autor: </strong> {n.autores}
+              {"  "}
+              <strong>Editorial: </strong> {n.editorial}
+              <br/>
               <Button
                 onClick={() => this.seleccionarPublicacion(n)} color="primary">
               ver detalle</Button>
@@ -118,16 +120,20 @@ export default class Publicacion extends Component {
     return (
       <div>
         <Row>
-          <p>
-            <strong> Editorial: </strong>{publicacion.autores}
-            <br/>
-            <strong> Edición: </strong>{publicacion.edicion}
-            <br/>
-            <strong> Genero: </strong>{publicacion.genero}
-            <br/>
-            <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
-          </p>
-          <Button onClick={this.desSeleccionarPublicacion} color="primary">Atras</Button>
+          <Col sm="2">
+            <p>
+              <strong> Editorial: </strong>{publicacion.autores}
+              <br/>
+              <strong> Edición: </strong>{publicacion.edicion}
+              <br/>
+              <strong> Genero: </strong>{publicacion.genero}
+              <br/>
+              <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
+            </p>
+          </Col>
+          <div>
+            <Button onClick={this.desSeleccionarPublicacion} color="success">Atrás</Button>
+          </div>
         </Row>
         <Row>
           {this.darElementosOwner(publicacion)}
