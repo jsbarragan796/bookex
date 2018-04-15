@@ -1,7 +1,7 @@
 
-<img src="https://raw.githubusercontent.com/jsbarragan796/bookex/master/public/navbarBookex3.png" title="Bookex" alt="Bookex logo" href="" height = 200px>
+<img src="https://raw.githubusercontent.com/jsbarragan796/bookex/master/public/navbarBookex3.png" title="Bookex" alt="Bookex logo" href="https://book-ex.herokuapp.com/" height = 200px>
 
-# BOOKEX
+# Bookex - Exchanging printed words
 
 ## Description
 This is a web application for a service of selling, interchanging or gifting books between the users of the app.
