@@ -10,6 +10,7 @@ import { Notificaciones } from "../api/notificaciones.js";
 import { Chats } from "../api/notificaciones.js";
 import { Publicaciones } from "../api/publicaciones.js";
 import { Calificaciones } from "../api/notificaciones.js";
+import "../../public/style.css";
 import { Jumbotron,
   Navbar,
   NavbarBrand,
@@ -93,7 +94,7 @@ class App extends Component {
     return (
       <Nav navbar>
         <NavbarBrand role="listitem">
-          <img src="/navbarBookex.png" height="80" alt="Logo Bookex"/>
+          <img src="/navbarBookex2.png" height="50" alt="Logo Bookex"/>
         </NavbarBrand>
         <NavItem>
           <NavLink >

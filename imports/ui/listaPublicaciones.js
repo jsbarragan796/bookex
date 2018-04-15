@@ -301,7 +301,7 @@ export default class ListaPublicaciones extends Component {
   render () {
     return (<div>
       <h1>Publicaciones</h1>
-      <Form className="new-task" onSubmit={this.buscar} >
+      <Form className="new-task" onSubmit={this.buscar} onChange={this.buscar} >
         <FormGroup>
           <Label for="busqueda">Búsqueda</Label>
           <InputGroup>
