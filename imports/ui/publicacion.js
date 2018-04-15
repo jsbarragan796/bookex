@@ -8,6 +8,8 @@ import {
   Input,
   FormGroup,
   Form,
+  Row,
+  Col,
   Label,
   Card,
   CardBody, CardSubtitle, CardTitle, CardText, CardFooter } from "reactstrap";
@@ -25,6 +27,8 @@ export default class Publicacion extends Component {
     this.eliminarPublicacion = this.eliminarPublicacion.bind(this);
     this.nuevaPublicacion = this.nuevaPublicacion.bind(this);
     this.actualizarCampos = this.actualizarCampos.bind(this);
+    this.buscarEnElementosPublicacion = this.buscarEnElementosPublicacion.bind(this);
+    this.darElementosOwner = this.darElementosOwner.bind(this);
   }
   componentDidUpdate () {
     this.actualizarCampos();
@@ -40,10 +44,18 @@ export default class Publicacion extends Component {
       publicacionSelected: null
     });
   }
-
+  buscarEnElementosPublicacion (elementos) {
+    let encontro = false;
+    for (var i = 0; i < elementos.length && !encontro; i++) {
+      if (elementos[i].ownerId === this.props.usuario._id) {
+        encontro = true;
+      }
+    }
+    return encontro;
+  }
   renderizarPublicaciones () {
     let publicaciones = this.props.publicaciones.filter((n) =>
-      (n.ownerId === this.props.usuario._id)
+      this.buscarEnElementosPublicacion(n.elementos)
     );
 
     return publicaciones.map((n) => {
@@ -55,7 +67,9 @@ export default class Publicacion extends Component {
               <Media heading>
                 Titulo: {n.titulo}
               </Media>
-              Autor: {n.autores} <Button
+              Autor: {n.autores}
+              Editorial:  {n.editorial}
+              <Button
                 onClick={() => this.seleccionarPublicacion(n)} color="primary">
               ver detalle</Button>
             </Media>
@@ -66,38 +80,59 @@ export default class Publicacion extends Component {
     });
   }
 
+  darElementosOwner (publicacion) {
+    let elementosOwner = [];
+    for (var i = 0; i < publicacion.elementos.length; i++) {
+      if (publicacion.elementos[i].ownerId === this.props.usuario._id) {
+        elementosOwner.push(publicacion.elementos[i]);
+      }
+    }
+    let resp = elementosOwner.map((elemento, i) => {
+      return (
+        <Col sm="4" key={i}>
+          <Card>
+            <CardBody>
+              <CardTitle>{publicacion.titulo}</CardTitle>
+              <CardSubtitle>{publicacion.autores}</CardSubtitle>
+              <br/>
+              <CardText>
+                <strong> Estado: </strong>{elemento.estado}
+                <br/>
+                <strong> Motivo publicación: </strong>{elemento.para}
+                <br/>
+              </CardText>
+              <Button color="danger" onClick={() => this.eliminarPublicacion(elemento)}>Eliminar</Button>
+              <br/>
+              <CardFooter className="text-muted">
+                Publicado el: {elemento.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")}
+              </CardFooter>
+            </CardBody>
+          </Card>
+        </Col>
+      );
+    });
+    return resp;
+  }
   renderizarPublicacion () {
     const publicacion = this.state.publicacionSelected;
     return (
-    // mejorar interfaz !!
-      <Card>
-        <CardBody>
-          <CardTitle>{publicacion.titulo}</CardTitle>
-          <CardSubtitle>{publicacion.autores}</CardSubtitle>
-          <br/>
-          <CardText>
+      <div>
+        <Row>
+          <p>
             <strong> Editorial: </strong>{publicacion.autores}
             <br/>
             <strong> Edición: </strong>{publicacion.edicion}
             <br/>
             <strong> Genero: </strong>{publicacion.genero}
             <br/>
-            <strong> Editorial: </strong>{publicacion.autores}
-            <br/>
-            <strong> Estado: </strong>{publicacion.estado}
-            <br/>
-            <strong> Motivo publicación: </strong>{publicacion.para}
-            <br/>
             <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
-          </CardText>
-          <Button color="danger" onClick={this.eliminarPublicacion}>Eliminar</Button>
-          <br/>
+          </p>
           <Button onClick={this.desSeleccionarPublicacion} color="primary">Atras</Button>
-          <CardFooter className="text-muted">
-            Publicado el: {publicacion.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")}
-          </CardFooter>
-        </CardBody>
-      </Card>
+        </Row>
+        <Row>
+          {this.darElementosOwner(publicacion)}
+        </Row>
+      </div>
     );
   }
   cambioVista () {
@@ -110,25 +145,48 @@ export default class Publicacion extends Component {
     }
   }
 
-  eliminarPublicacion () {
-    Meteor.call("publicacion.remove", this.state.publicacionSelected._id);
+  eliminarPublicacion (elemento) {
+    if (this.state.publicacionSelected.elementos.length === 1) {
+      Meteor.call("publicacion.remove", this.state.publicacionSelected._id);
+    } else {
+      let elementos = this.state.publicacionSelected.elementos;
+      let index = -1;
+      for (var i = 0; i < elementos.length && index === -1; i++) {
+        if (elementos[i].ownerId === elemento.ownerId &&
+          elementos[i].addedAt.getTime() === elemento.addedAt.getTime()) {
+          index = i;
+        }
+      }
+      elementos.splice(index, 1);
+      Meteor.call("publicacion.update.elementos", this.state.publicacionSelected._id, elementos);
+    }
     this.desSeleccionarPublicacion();
   }
   agregarPublicacion (event) {
     event.preventDefault();
-    // Find all the  field via the React ref
-    const titulo = ReactDOM.findDOMNode(this.refs.titulo).value.trim();
-    const autores = ReactDOM.findDOMNode(this.refs.autores).value.trim();
-    const editorial = ReactDOM.findDOMNode(this.refs.editorial).value.trim();
-    const edicion = ReactDOM.findDOMNode(this.refs.edicion).value.trim();
-    const genero = ReactDOM.findDOMNode(this.refs.genero).value.trim();
-    const estado = ReactDOM.findDOMNode(this.refs.estado).value.trim();
-    const para = ReactDOM.findDOMNode(this.refs.para).value.trim();
-    const publicacion = { titulo: titulo, autores: autores, editorial: editorial, edicion: edicion,
-      genero: genero, estado: estado, para: para };
-    // Guardar publicacion
-    Meteor.call("publicacion.insert", publicacion, this.props.usuario.username);
-
+    // Si la publicacion ya existe solo se agrega un elemento de lo contrario se crea uno nuevo
+    if (this.props.publicacionExistente !== null && typeof this.props.publicacionExistente !== "undefined") {
+      const estado = ReactDOM.findDOMNode(this.refs.estado).value.trim();
+      const para = ReactDOM.findDOMNode(this.refs.para).value.trim();
+      const elementos = this.props.publicacionExistente.elementos;
+      let elementoNuevo = { estado: estado, para: para,
+        addedAt: new Date(), ownerId: this.props.usuario._id, ownerName: this.props.usuario.username };
+      elementos.push(elementoNuevo);
+      Meteor.call("publicacion.update.elementos", this.props.publicacionExistente._id, elementos);
+    } else {
+      // Find all the  field via the React ref
+      const titulo = ReactDOM.findDOMNode(this.refs.titulo).value.trim();
+      const autores = ReactDOM.findDOMNode(this.refs.autores).value.trim();
+      const editorial = ReactDOM.findDOMNode(this.refs.editorial).value.trim();
+      const edicion = ReactDOM.findDOMNode(this.refs.edicion).value.trim();
+      const genero = ReactDOM.findDOMNode(this.refs.genero).value.trim();
+      const estado = ReactDOM.findDOMNode(this.refs.estado).value.trim();
+      const para = ReactDOM.findDOMNode(this.refs.para).value.trim();
+      const publicacion = { titulo: titulo, autores: autores, editorial: editorial, edicion: edicion,
+        genero: genero, estado: estado, para: para };
+      // Guardar publicacion
+      Meteor.call("publicacion.insert", publicacion, this.props.usuario.username);
+    }
     // Find an creal all the field via the React ref
     ReactDOM.findDOMNode(this.refs.titulo).value = "";
     ReactDOM.findDOMNode(this.refs.autores).value = "";
@@ -137,7 +195,6 @@ export default class Publicacion extends Component {
     ReactDOM.findDOMNode(this.refs.estado).value = "";
     ReactDOM.findDOMNode(this.refs.para).value = "";
     ReactDOM.findDOMNode(this.refs.genero).value = "";
-
     this.cambioVista();
   }
 
@@ -153,7 +210,7 @@ export default class Publicacion extends Component {
 
   darAnios () {
     let a = [];
-    for (var i = 1800; i < 2018; i++) {
+    for (var i = 2018; i > 1800; i--) {
       a.push(<option key={i}>{i}</option>);
     }
     return a;

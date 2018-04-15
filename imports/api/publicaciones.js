@@ -37,14 +37,26 @@ Meteor.methods({
       editorial: publicacion.editorial,
       genero: publicacion.genero,
       edicion: publicacion.edicion,
-      estado: publicacion.estado,
-      para: publicacion.para,
       nota: 0,
-      comentarios: [],
-      addedAt: new Date(),
-      ownerId: this.userId,
-      ownerName: ownerName
+      elementos: [{ estado: publicacion.estado, para: publicacion.para,
+        addedAt: new Date(), ownerId: this.userId, ownerName: ownerName }],
+      comentarios: []
     });
+  },
+  "publicacion.update.elementos" (idPublicacion, elementos) {
+    check(elementos, Array);
+    for (var i = 0; i < elementos.length; i++) {
+      check(elementos[i].estado, String);
+      check(elementos[i].para, String);
+      check(elementos[i].addedAt, Date);
+      check(elementos[i].ownerId, String);
+      check(elementos[i].ownerName, String);
+    }
+    check(idPublicacion, String);
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+    Publicaciones.update(idPublicacion, { $set: { elementos: elementos } });
   },
   "comentario.update" (idPublicacion, comentarios, nota) {
     check(comentarios, Array);

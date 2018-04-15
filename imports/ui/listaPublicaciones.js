@@ -184,7 +184,6 @@ export default class ListaPublicaciones extends Component {
                 <CardTitle>Título: {publicacion.titulo} </CardTitle>
                 <CardSubtitle>Autor: {publicacion.autores}</CardSubtitle>
                 <br />
-                <CardTitle>Dueño: {publicacion.ownerName}</CardTitle>
                 <CardText>
                   <strong> Edición: </strong>{publicacion.edicion}
                   <br />
@@ -192,20 +191,16 @@ export default class ListaPublicaciones extends Component {
                   <br />
                   <strong> Editorial: </strong>{publicacion.editorial}
                   <br />
-                  <strong> Estado: </strong>{publicacion.estado}
-                  <br />
-                  <strong> Motivo publicación: </strong>{publicacion.para}
-                  <br />
                   <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
                 </CardText>
-                <Button
+                {/* <Button
                   onClick={() => {
                     this.createChat(publicacion.ownerId,
-                      publicacion.ownerName);
+                    publicacion.ownerName);
                   }}
                   color="primary" >
                   Contactar a {publicacion.ownerName}
-                </Button>
+                </Button> */}
                 <Button color="primary"
                   onClick={() => this.seleccionarPublicacion(publicacion)}>Ver comentarios
                 </Button>
@@ -214,7 +209,7 @@ export default class ListaPublicaciones extends Component {
                 </Button>
                 <CardFooter className="text-muted">
                   {/*Para que la fecha quede de la forma: "YYYY/MM/DD" */}
-                  Comentado en : {publicacion.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")}
+                  {/* Comentado en : {publicacion.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")} */}
                 </CardFooter>
               </CardBody>
             </Card>
