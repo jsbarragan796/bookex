@@ -20,19 +20,37 @@ export default class Home extends Component {
     super(props);
     this.state = {
       visibleModal: false,
-      mensaje: ""
+      mensaje: "",
+      publicacionExSel: null
     };
     this.onDismiss = this.onDismiss.bind(this);
     this.onMostrar = this.onMostrar.bind(this);
     this.darCalificacion = this.darCalificacion.bind(this);
+    this.publicacionExSelecionada = this.publicacionExSelecionada.bind(this);
+    this.quitarPublicacion = this.quitarPublicacion.bind(this);
   }
   onMostrar (msg) {
-    this.setState({ mensaje: msg.mensaje });
-    this.setState({ visibleModal: true });
+    this.setState({
+      mensaje: msg.mensaje,
+      visibleModal: true });
   }
 
   onDismiss () {
     this.setState({ visibleModal: false });
+  }
+
+  publicacionExSelecionada (publicacion) {
+    this.setState({
+      publicacionExSel: publicacion,
+      mensaje: "Ya puedes agregar otra entrada de " +
+      publicacion.titulo + ", ve a la seccion de tus publicaciones y termina de completar el formulario",
+      visibleModal: true
+    });
+  }
+  quitarPublicacion () {
+    this.setState({
+      publicacionExSel: null
+    });
   }
   darCalificacion (id) {
     if (this.props.calificaciones.length > 0) {
@@ -84,6 +102,8 @@ export default class Home extends Component {
         publicaciones={this.props.publicaciones}
         usuario={this.props.usuario}
         getNota={this.getNota}
+        publicacionExistente={this.state.publicacionExSel}
+        quitarPublicacion ={this.quitarPublicacion}
       />
     );
     return publicaciones;
@@ -97,6 +117,7 @@ export default class Home extends Component {
         usuario={this.props.usuario}
         getNota={this.getNota}
         alert={this.onMostrar}
+        publicacionExSelecionada={this.publicacionExSelecionada}
       />
     );
     return lista;

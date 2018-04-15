@@ -15,7 +15,7 @@ export default class Publicacion extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      crearPublicacion: false,
+      crearPublicacionNueva: false,
       publicacionSelected: null
     };
     this.agregarPublicacion = this.agregarPublicacion.bind(this);
@@ -23,6 +23,11 @@ export default class Publicacion extends Component {
     this.seleccionarPublicacion = this.seleccionarPublicacion.bind(this);
     this.desSeleccionarPublicacion = this.desSeleccionarPublicacion.bind(this);
     this.eliminarPublicacion = this.eliminarPublicacion.bind(this);
+    this.nuevaPublicacion = this.nuevaPublicacion.bind(this);
+    this.actualizarCampos = this.actualizarCampos.bind(this);
+  }
+  componentDidUpdate () {
+    this.actualizarCampos();
   }
 
   seleccionarPublicacion (publicacion) {
@@ -77,15 +82,11 @@ export default class Publicacion extends Component {
             <br/>
             <strong> Genero: </strong>{publicacion.genero}
             <br/>
-            <strong> ISBN: </strong>{publicacion.isbn}
-            <br/>
             <strong> Editorial: </strong>{publicacion.autores}
             <br/>
             <strong> Estado: </strong>{publicacion.estado}
             <br/>
             <strong> Motivo publicación: </strong>{publicacion.para}
-            <br/>
-            <strong> Valoracion: </strong>{publicacion.valorVenta}
             <br/>
             <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
           </CardText>
@@ -100,9 +101,13 @@ export default class Publicacion extends Component {
     );
   }
   cambioVista () {
-    this.setState({
-      crearPublicacion: !this.state.crearPublicacion
-    });
+    if (this.props.publicacionExistente !== null && typeof this.props.publicacionExistente !== "undefined") {
+      this.props.quitarPublicacion();
+    } else {
+      this.setState({
+        crearPublicacionNueva: !this.state.crearPublicacionNueva
+      });
+    }
   }
 
   eliminarPublicacion () {
@@ -117,12 +122,10 @@ export default class Publicacion extends Component {
     const editorial = ReactDOM.findDOMNode(this.refs.editorial).value.trim();
     const edicion = ReactDOM.findDOMNode(this.refs.edicion).value.trim();
     const genero = ReactDOM.findDOMNode(this.refs.genero).value.trim();
-    const isbn = ReactDOM.findDOMNode(this.refs.isbn).value.trim();
     const estado = ReactDOM.findDOMNode(this.refs.estado).value.trim();
     const para = ReactDOM.findDOMNode(this.refs.para).value.trim();
-    const valorVenta = ReactDOM.findDOMNode(this.refs.valorVenta).value.trim();
     const publicacion = { titulo: titulo, autores: autores, editorial: editorial, edicion: edicion,
-      genero: genero, isbn: isbn, estado: estado, para: para, valorVenta: valorVenta };
+      genero: genero, estado: estado, para: para };
     // Guardar publicacion
     Meteor.call("publicacion.insert", publicacion, this.props.usuario.username);
 
@@ -131,15 +134,22 @@ export default class Publicacion extends Component {
     ReactDOM.findDOMNode(this.refs.autores).value = "";
     ReactDOM.findDOMNode(this.refs.editorial).value = "";
     ReactDOM.findDOMNode(this.refs.edicion).value = "";
-    ReactDOM.findDOMNode(this.refs.isbn).value = "";
     ReactDOM.findDOMNode(this.refs.estado).value = "";
     ReactDOM.findDOMNode(this.refs.para).value = "";
-    ReactDOM.findDOMNode(this.refs.valorVenta).value = "";
     ReactDOM.findDOMNode(this.refs.genero).value = "";
 
     this.cambioVista();
   }
 
+  actualizarCampos () {
+    if (this.props.publicacionExistente !== null && typeof this.props.publicacionExistente !== "undefined") {
+      ReactDOM.findDOMNode(this.refs.titulo).value = this.props.publicacionExistente.titulo;
+      ReactDOM.findDOMNode(this.refs.autores).value = this.props.publicacionExistente.autores;
+      ReactDOM.findDOMNode(this.refs.editorial).value = this.props.publicacionExistente.editorial;
+      ReactDOM.findDOMNode(this.refs.edicion).value = this.props.publicacionExistente.edicion;
+      ReactDOM.findDOMNode(this.refs.genero).value = this.props.publicacionExistente.genero;
+    }
+  }
 
   darAnios () {
     let a = [];
@@ -172,81 +182,86 @@ export default class Publicacion extends Component {
       return (<option key={i}>{n}</option>);
     });
   }
+  nuevaPublicacion (deshabilitar) {
+    return (<div>
+      <h1>Publicación a crear</h1>
+      <Form className="new-Publicacion" onSubmit={this.agregarPublicacion} >
+        <FormGroup>
+          <Label for="titulo">Titulo: </Label>
+          <Input
+            id="titulo"
+            type="text"
+            ref="titulo"
+            placeholder="Escribe el titulo"
+            disabled = {deshabilitar}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="autores"> Autor(es): </Label>
+          <Input
+            id="autores"
+            type="text"
+            ref="autores"
+            placeholder="Escribe autor (es)"
+            disabled = {deshabilitar}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="editorial"> Editorial: </Label>
+          <Input
+            id="editorial"
+            type="text"
+            ref="editorial"
+            placeholder="Escribe la editorial"
+            disabled = {deshabilitar}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="edicion">Edicion</Label>
+          <Input type="select" name="edicion" id="edicion" ref="edicion" disabled = {deshabilitar}>
+            {this.darAnios()}
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for="genero">Género</Label>
+          <Input type="select" name="genero" id="genero" ref="genero" disabled = {deshabilitar}>
+            {this.darGeneros()}
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for="estado">Estado</Label>
+          <Input type="select" name="estado" id="estado" ref="estado">
+            <option>Malo</option>
+            <option>Regular</option>
+            <option>Aceptable</option>
+            <option>Excelente</option>
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for="para">Intención de la publicación</Label>
+          <Input type="select" name="para" id="para" ref="para">
+            <option>Regalar</option>
+            <option>Vender</option>
+            <option>Cambiar</option>
+          </Input>
+        </FormGroup>
+        <Button color="primary">Crear</Button>
+        <Button onClick={this.cambioVista} color="danger">Cancelar</Button>
+      </Form>
+    </div>);
+  }
+
+  publicacionExistente () {
+    let resp = this.nuevaPublicacion(true);
+    return resp;
+  }
 
   crearCuerpo () {
     let resp = "";
-    if (this.state.crearPublicacion) {
-      resp = (<div>
-        <h1>Publicación a crear</h1>
-        <Form className="new-Publicacion" onSubmit={this.agregarPublicacion} >
-          <FormGroup>
-            <Label for="titulo">Titulo: </Label>
-            <Input
-              id="titulo"
-              type="text"
-              ref="titulo"
-              placeholder="Escribe el titulo"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="autores"> Autor(es): </Label>
-            <Input
-              id="autores"
-              type="text"
-              ref="autores"
-              placeholder="Escribe autor (es)"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="editorial"> Editorial: </Label>
-            <Input
-              id="editorial"
-              type="text"
-              ref="editorial"
-              placeholder="Escribe la editorial"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="edicion">Edicion</Label>
-            <Input type="select" name="edicion" id="edicion" ref="edicion">
-              {this.darAnios()}
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="genero">Edicion</Label>
-            <Input type="select" name="genero" id="genero" ref="genero">
-              {this.darGeneros()}
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="isbn">Isbn</Label>
-            <Input type="number" name="isbn" id="isbn" ref="isbn"/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="estado">Estado</Label>
-            <Input type="select" name="estado" id="estado" ref="estado">
-              <option>Malo</option>
-              <option>Regular</option>
-              <option>Aceptable</option>
-              <option>Excelente</option>
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="para">Intención de la publicación</Label>
-            <Input type="select" name="para" id="para" ref="para">
-              <option>Regalar</option>
-              <option>Vender</option>
-              <option>Cambiar</option>
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="valorVenta">¿ En cuanto valoras el libro en COPs?</Label>
-            <Input type="number" name="valorVenta" id="valorVenta" ref="valorVenta"/>
-          </FormGroup>
-          <Button color="primary">Crear</Button>
-          <Button onClick={this.cambioVista} color="danger">Cancelar</Button>
-        </Form>
-      </div>);
+    if (this.state.crearPublicacionNueva) {
+      resp = this.nuevaPublicacion(false);
+    } else if (this.props.publicacionExistente !== null && typeof this.props.publicacionExistente !== "undefined") {
+      resp = this.publicacionExistente();
     } else {
       let resp2 = "";
       if (this.state.publicacionSelected === null) {
@@ -277,5 +292,8 @@ export default class Publicacion extends Component {
 //prop types de chat
 Publicacion.propTypes = {
   usuario: PropTypes.object,
-  publicaciones: PropTypes.array
+  publicaciones: PropTypes.array,
+  getNota: PropTypes.func,
+  publicacionExistente: PropTypes.object,
+  quitarPublicacion: PropTypes.func
 };

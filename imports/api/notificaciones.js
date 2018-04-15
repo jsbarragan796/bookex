@@ -101,7 +101,9 @@ Meteor.methods({
         ownerId2,
         ownerId1: this.userId,
         username1: username1,
-        username2: username2
+        username2: username2,
+        username1Califico: false,
+        username2Califico: false
       });
     }
   }

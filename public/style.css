@@ -141,8 +141,10 @@ div#login-buttons-open-change-password.login-button:hover{
 .btn-danger:hover {
     background-color: #A30E38;
     border-color: #bd2130;
+    font-family: sifonn;
 }
 .btn-danger {
     background-color: #A33E5A;
     border: 0;
+    font-family: sifonn;
 }

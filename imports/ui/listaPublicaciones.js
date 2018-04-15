@@ -181,8 +181,8 @@ export default class ListaPublicaciones extends Component {
           <Col sm="4" key={publicacion._id}>
             <Card>
               <CardBody>
-                <CardTitle>Título {publicacion.titulo} </CardTitle>
-                <CardSubtitle>Autor {publicacion.autores}</CardSubtitle>
+                <CardTitle>Título: {publicacion.titulo} </CardTitle>
+                <CardSubtitle>Autor: {publicacion.autores}</CardSubtitle>
                 <br />
                 <CardTitle>Dueño: {publicacion.ownerName}</CardTitle>
                 <CardText>
@@ -190,25 +190,28 @@ export default class ListaPublicaciones extends Component {
                   <br />
                   <strong> Género: </strong>{publicacion.genero}
                   <br />
-                  <strong> ISBN: </strong>{publicacion.isbn}
-                  <br />
                   <strong> Editorial: </strong>{publicacion.editorial}
                   <br />
                   <strong> Estado: </strong>{publicacion.estado}
                   <br />
                   <strong> Motivo publicación: </strong>{publicacion.para}
                   <br />
-                  <strong> Valoracion: </strong>{publicacion.valorVenta}
-                  <br />
                   <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
                 </CardText>
                 <Button
-                  onClick={() => { this.createChat(publicacion.ownerId, publicacion.ownerName); }}
-                  color="primary" >Contactar a {publicacion.ownerName}
+                  onClick={() => {
+                    this.createChat(publicacion.ownerId,
+                      publicacion.ownerName);
+                  }}
+                  color="primary" >
+                  Contactar a {publicacion.ownerName}
                 </Button>
                 <Button color="primary"
-                  onClick={() => this.seleccionarPublicacion(publicacion)}>Ver comentarios</Button>
-                <br />
+                  onClick={() => this.seleccionarPublicacion(publicacion)}>Ver comentarios
+                </Button>
+                <Button color="primary"
+                  onClick={() => this.props.publicacionExSelecionada(publicacion)} > Añade uno
+                </Button>
                 <CardFooter className="text-muted">
                   {/*Para que la fecha quede de la forma: "YYYY/MM/DD" */}
                   Comentado en : {publicacion.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")}
@@ -328,5 +331,6 @@ ListaPublicaciones.propTypes = {
   usuario: PropTypes.object,
   publicaciones: PropTypes.array,
   getNota: PropTypes.func,
-  alert: PropTypes.func
+  alert: PropTypes.func,
+  publicacionExSelecionada: PropTypes.func
 };
