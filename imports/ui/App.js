@@ -11,12 +11,14 @@ import { Chats } from "../api/notificaciones.js";
 import { Publicaciones } from "../api/publicaciones.js";
 import { Calificaciones } from "../api/notificaciones.js";
 import "../../public/style.css";
-import { Jumbotron,
+import {
   Navbar,
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink } from "reactstrap";
+  NavLink,
+  NavbarToggler,
+  Collapse } from "reactstrap";
 
 
 class App extends Component {
@@ -25,14 +27,20 @@ class App extends Component {
     this.state = {
       chatSeleccionado: null,
       mensajes: [],
-      enHome: true
+      enHome: true,
+      isOpen: false
     };
     this.seleccionarChat = this.seleccionarChat.bind(this);
     this.desSeleccionarChat = this.desSeleccionarChat.bind(this);
     this.cambioStats = this.cambioStats.bind(this);
     this.cambioHome = this.cambioHome.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
-
+  toggle () {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
   seleccionarChat (chat) {
     this.setState({
       chatSeleccionado: chat,
@@ -56,7 +64,7 @@ class App extends Component {
     });
   }
 
-  renderNav () {
+  renderNav (usuario) {
     //active
     let home = "";
     let stats = "";
@@ -64,51 +72,57 @@ class App extends Component {
       if (this.state.enHome) {
         home = (
           <NavItem>
-            <NavLink onClick = {this.cambioHome} active>Home</NavLink>
+            <NavLink onClick = {this.cambioHome} active>Tu menú</NavLink>
           </NavItem>
         );
         stats = (
           <NavItem>
-            <NavLink onClick = {this.cambioStats} > Stats</NavLink>
+            <NavLink onClick = {this.cambioStats} > Inicio</NavLink>
           </NavItem>
         );
       } else {
         home = (
           <NavItem>
-            <NavLink onClick = {this.cambioHome} >Home</NavLink>
+            <NavLink onClick = {this.cambioHome} >Tu menú</NavLink>
           </NavItem>
         );
         stats = (
           <NavItem>
-            <NavLink onClick = {this.cambioStats} active> Stats</NavLink>
+            <NavLink onClick = {this.cambioStats} active> Inicio</NavLink>
           </NavItem>
         );
       }
     } else {
       stats = (
         <NavItem>
-          <NavLink active> Stats</NavLink>
+          <NavLink active> Inicio</NavLink>
         </NavItem>
       );
     }
     return (
-      <Nav navbar>
+      <Navbar color="faded" light expand="md">
         <NavbarBrand role="listitem">
           <img src="/navbarBookex2.png" height="50" alt="Logo Bookex"/>
         </NavbarBrand>
-        <NavItem>
-          <NavLink >
-            <AccountsUIWrapper />
-          </NavLink>
-        </NavItem>
-        {home}
-        {stats}
-      </Nav>);
+        <NavbarToggler onClick={this.toggle} />
+        <Collapse isOpen={this.state.isOpen} navbar>
+          <Nav className="ml-auto" navbar>
+            {stats}
+            {home}
+            <NavItem>
+              <NavLink >
+                {usuario}
+                <AccountsUIWrapper />
+              </NavLink>
+            </NavItem>
+          </Nav>
+        </Collapse>
+      </Navbar>);
   }
 
 
   render () {
-    const usuario = this.props.usuario ? ", " + this.props.usuario.username : " a Bookex";
+    const usuario = this.props.usuario ? "Hola, " : "Realiza ";
     const cuerpo = this.state.enHome && this.props.usuario ? (
       <Home salirChat={this.desSeleccionarChat} usuario={this.props.usuario}
         chatSeleccionado={this.state.chatSeleccionado}
@@ -119,18 +133,13 @@ class App extends Component {
     ) : <Stats publicaciones={this.props.publicaciones} calificaciones={this.props.calificaciones}/>;
     return (
       <div>
-        <Navbar color="faded" light expand="md">
-          {this.renderNav()}
-          <Nav className="ml-auto" navbar />
-        </Navbar>
-        <Jumbotron>
-          <h1> Bienvenido{usuario}</h1>
-        </Jumbotron>
+        {this.renderNav(usuario)}
         {cuerpo}
       </div>
     );
   }
 }
+
 
 //prop types for App
 App.propTypes = {

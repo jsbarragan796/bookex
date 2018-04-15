@@ -202,14 +202,82 @@ export default class Stats extends Component {
   }
   render () {
     return (
-      <Row>
-        {this.usuarioNotaTop()}
-        {this.usuarioNotaNoTop()}
-        {this.publicacionesNotaTop()}
-        {this.publicacionesComentarioTop()}
-        {this.publicacionesValorTop()}
-        {this.publicacionesValorNoTop()}
-      </Row>
+      <div>
+        <div className="bookexLogo">
+          <img src="/logoBookex2.png" height="300" alt="Logo Bookex"/>
+        </div>
+        <Row>
+          <Col sm="3">
+            <div className="help">
+              <div className="helpLogo">
+                <img src="/setup.png" height="80" alt="tuerca logo"/>
+              </div>
+              <h3 >Crea una cuenta</h3>
+              <p>
+                Puedes usar tu cuenta personal de Google o
+                crea una en el formulario, solo introduce un nombre de usuario y una contraseña.
+                Esta opción la encuentras en la barra de navegación en el botón SingIn.
+              </p>
+            </div>
+          </Col>
+          <Col sm="3">
+            <div className="help">
+              <div className="helpLogo">
+                <img src="/search.png" height="80" alt="lupa buscar"/>
+              </div>
+              <h3 >Busca un libro</h3>
+              <p>
+                En tu menú en la barra de navegación puedes buscar un libro por título,
+                autor o editorial. Ve las condiciones de los distintos libros que otros
+                publicaron. Cuando veas una publicación de interés, inicia chat con el
+                dueño para coordinar la transacción. Recuerda calificar al usuario al
+                terminar.
+              </p>
+            </div>
+          </Col>
+          <Col sm="3">
+            <div className="help">
+              <div className="helpLogo">
+                <img src="/pen.png" height="80" alt="Logo pen"/>
+              </div>
+              <h3 >Crea una publicación de tu libro</h3>
+              <p>
+                En tu menú en la barra de navegación puedes crear una publicación,
+                busca si el libro que tienes ya esta registrado en el sistema esto agilizara el
+                formulario. En el caso que no esté diligencia el formulario completamente.
+              </p>
+            </div>
+          </Col>
+          <Col sm="3">
+            <div className="help">
+              <div className="helpLogo">
+                <img src="/msg.png" height="80" alt="Logo mensaje"/>
+              </div>
+              <h3 >Mensajes</h3>
+              <p>
+                En tu menú en la barra de navegación en la sección de mensajes, vas a ver
+                tus hilos de conversaciones. Así coordinaras con las personas que están
+                interesadas en alguno de tus libros o que son dueñas de un libro de tu interés.
+              </p>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12">
+            <div className="help">
+              <h1> Estadísticas </h1>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          {this.usuarioNotaTop()}
+          {this.usuarioNotaNoTop()}
+          {this.publicacionesNotaTop()}
+          {this.publicacionesComentarioTop()}
+          {this.publicacionesValorTop()}
+          {this.publicacionesValorNoTop()}
+        </Row>
+      </div>
     );
   }
 }

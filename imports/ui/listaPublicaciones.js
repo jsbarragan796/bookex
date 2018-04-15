@@ -36,6 +36,7 @@ export default class ListaPublicaciones extends Component {
     this.crearComentario = this.crearComentario.bind(this);
     this.createChat = this.createChat.bind(this);
     this.buscar = this.buscar.bind(this);
+    this.darElementosNoOwner = this.darElementosNoOwner.bind(this);
   }
   buscar (event) {
     event.preventDefault();
@@ -86,7 +87,7 @@ export default class ListaPublicaciones extends Component {
     Meteor.call("comentario.update", this.state.publicacionSelected._id, nuevosComentarios, nuevaNota);
     ReactDOM.findDOMNode(this.refs.comentario).value = "";
     ReactDOM.findDOMNode(this.refs.nota).value = 1;
-    this.desSeleccionarPublicacion();
+    // this.desSeleccionarPublicacion();
   }
 
   updatePagination (pagina, fin) {
@@ -149,6 +150,42 @@ export default class ListaPublicaciones extends Component {
       </Pagination>
     );
   }
+  darElementosNoOwner (publicacion) {
+    let elementosNoOwner = [];
+    for (var i = 0; i < publicacion.elementos.length; i++) {
+      if (publicacion.elementos[i].ownerId !== this.props.usuario._id) {
+        elementosNoOwner.push(publicacion.elementos[i]);
+      }
+    }
+    let resp = elementosNoOwner.map((n, i) => {
+      return (
+        <Col sm="4" key={i}>
+          <Card>
+            <CardBody>
+              <CardTitle>Dueño: {n.ownerName}</CardTitle>
+              <CardSubtitle>
+                Estado : {n.estado}
+              </CardSubtitle>
+              <br />
+              <CardText>
+                <strong>Motivo publicación:</strong> {n.para}
+                <strong> Comentario: </strong>
+              </CardText>
+              <Button onClick={() => {this.createChat(n.ownerId, n.ownerName);}}color="primary" >
+                Contactar a {n.ownerName}
+              </Button>
+              <br />
+              <CardFooter className="text-muted">
+                {/*Para que la fecha quede de la forma: "YYYY/MM/DD" */}
+                Publicado en: {n.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")}
+              </CardFooter>
+            </CardBody>
+          </Card>
+        </Col>
+      );
+    });
+    return resp;
+  }
 
   renderizarPublicaciones () {
     let resp = "";
@@ -179,7 +216,7 @@ export default class ListaPublicaciones extends Component {
       resp = publicaciones.map((publicacion) => {
         return (
           <Col sm="4" key={publicacion._id}>
-            <Card>
+            <Card >
               <CardBody>
                 <CardTitle>Título: {publicacion.titulo} </CardTitle>
                 <CardSubtitle>Autor: {publicacion.autores}</CardSubtitle>
@@ -193,24 +230,12 @@ export default class ListaPublicaciones extends Component {
                   <br />
                   <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
                 </CardText>
-                {/* <Button
-                  onClick={() => {
-                    this.createChat(publicacion.ownerId,
-                    publicacion.ownerName);
-                  }}
-                  color="primary" >
-                  Contactar a {publicacion.ownerName}
-                </Button> */}
                 <Button color="primary"
-                  onClick={() => this.seleccionarPublicacion(publicacion)}>Ver comentarios
+                  onClick={() => this.seleccionarPublicacion(publicacion)}>Ver detalle
                 </Button>
                 <Button color="primary"
                   onClick={() => this.props.publicacionExSelecionada(publicacion)} > Añade uno
                 </Button>
-                <CardFooter className="text-muted">
-                  {/*Para que la fecha quede de la forma: "YYYY/MM/DD" */}
-                  {/* Comentado en : {publicacion.addedAt.toJSON().slice(0, 10).replace(/-/g, "/")} */}
-                </CardFooter>
               </CardBody>
             </Card>
           </Col>
@@ -226,7 +251,10 @@ export default class ListaPublicaciones extends Component {
         </div>
       );
     } else {
-      resp = this.state.publicacionSelected.comentarios.map((n, i) => {
+      //Renderizar elementos publicacion
+      resp = this.darElementosNoOwner(this.state.publicacionSelected);
+      //Renderizar comentarios
+      let resp2 = this.state.publicacionSelected.comentarios.map((n, i) => {
         return (
           <Col sm="4" key={i}>
             <Card>
@@ -249,8 +277,19 @@ export default class ListaPublicaciones extends Component {
       });
       resp = (
         <div>
-          <h2>Comentarios publicacion del libro: {this.state.publicacionSelected.titulo}</h2>
+          <h2>Libro: {this.state.publicacionSelected.titulo}</h2>
+          <h3>Autores: {this.state.publicacionSelected.autores}</h3>
+          <strong> Edición: </strong>{this.state.publicacionSelected.edicion}
+          <br />
+          <strong> Género: </strong>{this.state.publicacionSelected.genero}
+          <br />
+          <strong> Editorial: </strong>{this.state.publicacionSelected.editorial}
+          <br />
+          <strong> Nota: </strong> {this.props.getNota(this.state.publicacionSelected.nota)}
           <Button onClick={this.desSeleccionarPublicacion} color="secondary">Regresar</Button>
+          <Row>
+            {resp}
+          </Row>
           <Row>
             <Col sm="4">
               <Form className="new-comentario" onSubmit={this.crearComentario} >
@@ -269,9 +308,7 @@ export default class ListaPublicaciones extends Component {
                         </Input>
                       </CardSubtitle>
                     </FormGroup>
-
                     <br />
-
                     <FormGroup>
                       <Label for="comentario">Comentario : </Label>
                       <InputGroup>
@@ -289,7 +326,9 @@ export default class ListaPublicaciones extends Component {
                 </Card>
               </Form>
             </Col>
-            {resp}
+          </Row>
+          <Row>
+            {resp2}
           </Row>
         </div>
       );
