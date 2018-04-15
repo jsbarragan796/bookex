@@ -25,8 +25,9 @@ export default class Home extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      visibleModal: false,
-      mensaje: "",
+      visibleModal: true,
+      mensaje: "Bookex está recolectando imformacion de lo que haces con Hotjar." +
+      " Al usar la aplicación aceptas la captura de tu interacción con la aplicación",
       publicacionExSel: null,
       activeTab: "1"
     };
