@@ -20,6 +20,14 @@ Meteor.methods({
   "publicacion.insert" (publicacion, ownerName) {
     check(publicacion, Object);
     check(ownerName, String);
+    check(publicacion.titulo, String);
+    check(publicacion.autores, String);
+    check(publicacion.editorial, String);
+    check(publicacion.genero, String);
+    check(publicacion.edicion, String);
+    check(publicacion.estado, String);
+    check(publicacion.para, String);
+    check(publicacion.autores, String);
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
     }
@@ -29,10 +37,8 @@ Meteor.methods({
       editorial: publicacion.editorial,
       genero: publicacion.genero,
       edicion: publicacion.edicion,
-      isbn: publicacion.isbn,
       estado: publicacion.estado,
       para: publicacion.para,
-      valorVenta: publicacion.valorVenta,
       nota: 0,
       comentarios: [],
       addedAt: new Date(),
