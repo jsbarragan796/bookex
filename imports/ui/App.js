@@ -92,7 +92,9 @@ class App extends Component {
     }
     return (
       <Nav navbar>
-        <NavbarBrand role="listitem">Bookex</NavbarBrand>
+        <NavbarBrand role="listitem">
+          <img src="/navbarBookex.png" height="80" alt="Logo Bookex"/>
+        </NavbarBrand>
         <NavItem>
           <NavLink >
             <AccountsUIWrapper />
@@ -144,7 +146,8 @@ export default withTracker(() => {
   Meteor.subscribe("publicaciones");
   Meteor.subscribe("calificaciones");
   let user = Meteor.user();
-  if ((user !== null && typeof user !== "undefined") && (user.profile !== null && typeof user.profile !== "undefined")) {
+  if ((user !== null && typeof user !== "undefined") &&
+  (user.profile !== null && typeof user.profile !== "undefined")) {
     user.username = user.profile.name;
   }
   return {

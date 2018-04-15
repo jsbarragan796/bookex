@@ -33,7 +33,6 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   "noti.insert" (text, ownerId2, chatId, username2, username1) {
-
     // Only logged in users can use this method
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
@@ -50,7 +49,7 @@ Meteor.methods({
     text = text.trim();
 
     // Only insert messages if the text is not empty
-    if (text !== ""){
+    if (text !== "") {
       Notificaciones.insert({
         chatId,
         text,
@@ -61,7 +60,6 @@ Meteor.methods({
         username2: username2
       });
     }
-
   },
   "chat.remove" (idChat) {
     check(idChat, String);

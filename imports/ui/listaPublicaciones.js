@@ -12,7 +12,8 @@ import {
   InputGroup,
   Form,
   Label,
-  FormGroup
+  FormGroup,
+  InputGroupAddon
 } from "reactstrap";
 
 export default class ListaPublicaciones extends Component {
@@ -20,13 +21,28 @@ export default class ListaPublicaciones extends Component {
     super(props);
     this.state = {
       crearPublicacion: false,
-      publicacionSelected: null
+      publicacionSelected: null,
+      busqueda: ""
     };
     this.seleccionarPublicacion = this.seleccionarPublicacion.bind(this);
     this.desSeleccionarPublicacion = this.desSeleccionarPublicacion.bind(this);
     this.crearComentario = this.crearComentario.bind(this);
     this.createChat = this.createChat.bind(this);
+    this.buscar = this.buscar.bind(this);
   }
+  buscar (event) {
+    event.preventDefault();
+    // Find the text field via the React ref
+    const text = ReactDOM.findDOMNode(this.refs.busqueda).value.trim();
+
+    /*
+    Solo busqueda si solo se ha introducido algo
+    */
+    this.setState({
+      busqueda: text
+    });
+  }
+
   seleccionarPublicacion (publicacion) {
     this.setState({
       publicacionSelected: publicacion
@@ -39,6 +55,8 @@ export default class ListaPublicaciones extends Component {
   }
   createChat (idUser2, username2) {
     Meteor.call("chat.insert", idUser2, username2, this.props.usuario.username);
+    let msg = { mensaje: "Ahora puedes chatear con " + username2 + ", busca el hilo del chat en tus mensajes" };
+    this.props.alert(msg);
   }
 
   promedioNota (publicacion, notaNueva) {
@@ -71,25 +89,31 @@ export default class ListaPublicaciones extends Component {
       let publicaciones = this.props.publicaciones.filter((n) =>
         (n.ownerId !== this.props.usuario._id)
       );
+      if (this.state.busqueda !== "") {
+        publicaciones = publicaciones.filter((n) =>
+          (n.autores.toLowerCase().includes(this.state.busqueda.toLowerCase()) ||
+           n.genero.toLowerCase().includes(this.state.busqueda.toLowerCase()) ||
+           n.titulo.toLowerCase().includes(this.state.busqueda.toLowerCase()) ||
+           n.editorial.toLowerCase().includes(this.state.busqueda.toLowerCase()))
+        );
+      }
       resp = publicaciones.map((publicacion) => {
         return (
           <Col sm="4" key={publicacion._id}>
             <Card>
               <CardBody>
-                <CardTitle>{publicacion.titulo} </CardTitle>
-                <CardSubtitle>{publicacion.autores}</CardSubtitle>
+                <CardTitle>Título {publicacion.titulo} </CardTitle>
+                <CardSubtitle>Autor {publicacion.autores}</CardSubtitle>
                 <br />
                 <CardTitle>Dueño: {publicacion.ownerName}</CardTitle>
                 <CardText>
-                  <strong> Editorial: </strong>{publicacion.autores}
-                  <br />
                   <strong> Edición: </strong>{publicacion.edicion}
                   <br />
-                  <strong> Genero: </strong>{publicacion.genero}
+                  <strong> Género: </strong>{publicacion.genero}
                   <br />
                   <strong> ISBN: </strong>{publicacion.isbn}
                   <br />
-                  <strong> Editorial: </strong>{publicacion.autores}
+                  <strong> Editorial: </strong>{publicacion.editorial}
                   <br />
                   <strong> Estado: </strong>{publicacion.estado}
                   <br />
@@ -164,7 +188,6 @@ export default class ListaPublicaciones extends Component {
                     <br />
 
                     <FormGroup>
-
                       <Label for="comentario">Comentario : </Label>
                       <InputGroup>
                         <Input
@@ -175,7 +198,6 @@ export default class ListaPublicaciones extends Component {
                         />
                       </InputGroup>
                     </FormGroup>
-
                     <br/>
                     <Button color="primary">Comentar</Button>
                   </CardBody>
@@ -190,8 +212,26 @@ export default class ListaPublicaciones extends Component {
     return resp;
   }
   render () {
-    return (<div><h1>Publicaciones de los demas </h1>
-      {this.renderizarPublicaciones()}</div>);
+    return (<div>
+      <h1>Publicaciones</h1>
+      <Form className="new-task" onSubmit={this.buscar} >
+        <FormGroup>
+          <Label for="busqueda">Búsqueda</Label>
+          <InputGroup>
+            <Input
+              id="busqueda"
+              type="text"
+              ref="busqueda"
+              placeholder="Busca por autor, título, género o editorial"
+            />
+            <InputGroupAddon addonType="append">
+              <Button color="secondary">Buscar</Button>
+            </InputGroupAddon>
+          </InputGroup>
+        </FormGroup>
+      </Form>
+      {this.renderizarPublicaciones()}
+    </div>);
   }
 }
 
@@ -200,5 +240,6 @@ export default class ListaPublicaciones extends Component {
 ListaPublicaciones.propTypes = {
   usuario: PropTypes.object,
   publicaciones: PropTypes.array,
-  getNota: PropTypes.func
+  getNota: PropTypes.func,
+  alert: PropTypes.func
 };

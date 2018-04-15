@@ -15,14 +15,14 @@ import {
 
 
 export default class Chat extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.enviarMensaje = this.enviarMensaje.bind(this);
     this.eliminarChat = this.eliminarChat.bind(this);
     this.calificar = this.calificar.bind(this);
   }
 
-  renderizarMensajes() {
+  renderizarMensajes () {
     let mensajes = this.props.mensajes.filter((n) =>
       (n.chatId === this.props.chatSeleccionado._id)
     );
@@ -42,19 +42,19 @@ export default class Chat extends Component {
       );
     });
   }
-  eliminarChat(idChat) {
+  eliminarChat (idChat) {
     Meteor.call("chat.remove", idChat);
     this.props.salirChat();
   }
 
-  enviarMensaje(event) {
+  enviarMensaje (event) {
     event.preventDefault();
     // Find the text field via the React ref
     const text = ReactDOM.findDOMNode(this.refs.mensaje).value.trim();
 
     /*
      Only inserts the message if the text has a content and is not
-     and empty string 
+     and empty string
     */
     if (text !== "") {
       const ownerId2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
@@ -70,7 +70,7 @@ export default class Chat extends Component {
       ReactDOM.findDOMNode(this.refs.mensaje).value = "";
     }
   }
-  calificar(event) {
+  calificar (event) {
     event.preventDefault();
     // Find the text field via the React ref
     const calificacion = Number(ReactDOM.findDOMNode(this.refs.calificacion).value.trim());
@@ -81,7 +81,7 @@ export default class Chat extends Component {
     let c = 0;
     let n = 0;
     if (this.props.calificaciones.length > 0) {
-      function buscar(calificacion) {
+      function buscar (calificacion) {
         return (calificacion.idUser === ownerId2);
       }
       let cal = this.props.calificaciones.find(buscar);
@@ -98,7 +98,7 @@ export default class Chat extends Component {
 
     ReactDOM.findDOMNode(this.refs.calificacion).value = 1;
   }
-  render() {
+  render () {
     return (
       <div>
         <Button onClick={this.props.salirChat} color="primary">Salir Chat</Button>

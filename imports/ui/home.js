@@ -6,14 +6,33 @@ import ListaPublicaciones from "./listaPublicaciones.js";
 import {
   ListGroupItem,
   Row,
-  Col
+  Col,
+  Modal,
+  Button,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
 } from "reactstrap";
 
 
 export default class Home extends Component {
   constructor (props) {
     super(props);
+    this.state = {
+      visibleModal: false,
+      mensaje: ""
+    };
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onMostrar = this.onMostrar.bind(this);
     this.darCalificacion = this.darCalificacion.bind(this);
+  }
+  onMostrar (msg) {
+    this.setState({ mensaje: msg.mensaje });
+    this.setState({ visibleModal: true });
+  }
+
+  onDismiss () {
+    this.setState({ visibleModal: false });
   }
   darCalificacion (id) {
     if (this.props.calificaciones.length > 0) {
@@ -77,6 +96,7 @@ export default class Home extends Component {
         publicaciones={this.props.publicaciones}
         usuario={this.props.usuario}
         getNota={this.getNota}
+        alert={this.onMostrar}
       />
     );
     return lista;
@@ -96,17 +116,28 @@ export default class Home extends Component {
 
   render () {
     return (
-      <Row>
-        <Col sm="3">
-          <h2>Tus Mensajes</h2>
-          <hr/>
-          {this.darChats()}
-        </Col>
-        <Col sm="9">
-          {this.darPublicaciones()}
-          {this.renderListaPub()}
-        </Col>
-      </Row>
+      <div>
+        <Modal isOpen={this.state.visibleModal} toggle={this.onDismiss} className="Notificacion">
+          <ModalHeader toggle={this.toggle}>Notificación</ModalHeader>
+          <ModalBody>
+            {this.state.mensaje}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.onDismiss}>Aceptar</Button>
+          </ModalFooter>
+        </Modal>
+        <Row>
+          <Col sm="3">
+            <h2>Tus Mensajes</h2>
+            <hr/>
+            {this.darChats()}
+          </Col>
+          <Col sm="9">
+            {this.darPublicaciones()}
+            {this.renderListaPub()}
+          </Col>
+        </Row>
+      </div>
     );
   }
 }
