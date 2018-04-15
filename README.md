@@ -1,5 +1,5 @@
 
-<img src="https://raw.githubusercontent.com/jsbarragan796/bookex/master/public/logoBookex.png" title="Bookex" alt="Bookex logo" href="" height = 100px width = 100px>
+<img src="https://raw.githubusercontent.com/jsbarragan796/bookex/master/public/logoBookex2.png" title="Bookex" alt="Bookex logo" href="" height = 100px width = 100px>
 ## Description
 This is a web application for a service of selling, interchanging or gifting books between the users of the app.
 This app uses:
