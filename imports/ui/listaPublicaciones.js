@@ -12,36 +12,42 @@ import {
   InputGroup,
   Form,
   Label,
-  FormGroup
+  FormGroup,
+  Pagination,
+  PaginationItem,
+  PaginationLink
 } from "reactstrap";
+import { isNull } from "util";
 
 export default class ListaPublicaciones extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       crearPublicacion: false,
-      publicacionSelected: null
+      publicacionSelected: null,
+      page: 0
     };
     this.seleccionarPublicacion = this.seleccionarPublicacion.bind(this);
     this.desSeleccionarPublicacion = this.desSeleccionarPublicacion.bind(this);
     this.crearComentario = this.crearComentario.bind(this);
     this.createChat = this.createChat.bind(this);
+    this.updatePagination = this.updatePagination.bind(this);
   }
-  seleccionarPublicacion (publicacion) {
+  seleccionarPublicacion(publicacion) {
     this.setState({
       publicacionSelected: publicacion
     });
   }
-  desSeleccionarPublicacion () {
+  desSeleccionarPublicacion() {
     this.setState({
       publicacionSelected: null
     });
   }
-  createChat (idUser2, username2) {
+  createChat(idUser2, username2) {
     Meteor.call("chat.insert", idUser2, username2, this.props.usuario.username);
   }
 
-  promedioNota (publicacion, notaNueva) {
+  promedioNota(publicacion, notaNueva) {
     let total = publicacion.comentarios.length;
     let promedio = publicacion.nota * total;
     promedio = promedio + notaNueva;
@@ -49,7 +55,7 @@ export default class ListaPublicaciones extends Component {
     return promedio;
   }
 
-  crearComentario (event) {
+  crearComentario(event) {
     event.preventDefault();
     // Find the text field via the React ref
     const texto = ReactDOM.findDOMNode(this.refs.comentario).value.trim();
@@ -65,12 +71,85 @@ export default class ListaPublicaciones extends Component {
     this.desSeleccionarPublicacion();
   }
 
-  renderizarPublicaciones () {
+  updatePagination(pagina, fin) {
+    // updates only if the new page is different from the actual page
+    if (this.state.page !== pagina) {
+      let nextPage = null; //the number on the new page
+      let actual = this.state.page; //the current page
+
+      // calculates the new page
+      if (pagina === "next" && actual + 1 < fin) nextPage = actual + 1;
+      if (pagina === "prev" && actual > 0) nextPage = actual - 1;
+      if (!isNaN(pagina)) nextPage = pagina;
+
+      // updates if there was a page calculated
+      if(!isNull(nextPage)){
+        //Updates the state with the new page
+      this.setState({ page: nextPage });
+      }
+
+    }
+  }
+
+  // this renders the pagination
+  renderPagination() {
+    //the tam of the list
+    let tam = this.props.publicaciones.filter((n) =>
+      (n.ownerId !== this.props.usuario._id)
+    ).length;
+
+    // Calculates the number of pages
+    /* Math.floor(tam / 20) + 1 */
+    const pages = 6;
+    // Calculates the current page
+    const currentPage = this.state.page;
+    // Checks if the user is in the last page or not
+    const end = pages === currentPage + 1;
+    // Checks if the user is on the first page or not
+    const start = currentPage === 0;
+    // The array of pagination items
+    let items = Array(pages);
+    for (let index = 0; index < items.length; index++) {
+      items[index] = (
+        <PaginationItem
+          onClick={() => this.updatePagination(index)}
+          key={index}
+          active={index === currentPage}>
+          <PaginationLink>
+            {index + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    return (
+      <Pagination>
+        <PaginationItem
+          onClick={() => this.updatePagination("prev")}
+          disabled={start} >
+          <PaginationLink previous />
+        </PaginationItem>
+        {items}
+        <PaginationItem
+          onClick={() => this.updatePagination("next", items.length)}
+          disabled={end}  >
+          <PaginationLink next />
+        </PaginationItem>
+      </Pagination>
+    );
+  }
+
+  renderizarPublicaciones() {
     let resp = "";
     if (this.state.publicacionSelected === null) {
-      let publicaciones = this.props.publicaciones.filter((n) =>
-        (n.ownerId !== this.props.usuario._id)
+      // Creates the boundary of the publications
+      let inicio = this.state.page * 20;
+      let fin = inicio + 19;
+      // Filters all publications based on the range and owner
+      let publicaciones = this.props.publicaciones.filter((n, i) =>
+        (n.ownerId !== this.props.usuario._id && inicio <= i && i <= fin)
       );
+
+      // Makes the card for every publication
       resp = publicaciones.map((publicacion) => {
         return (
           <Col sm="4" key={publicacion._id}>
@@ -100,7 +179,7 @@ export default class ListaPublicaciones extends Component {
                   <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
                 </CardText>
                 <Button
-                  onClick= {() => {this.createChat(publicacion.ownerId, publicacion.ownerName);}}
+                  onClick={() => { this.createChat(publicacion.ownerId, publicacion.ownerName); }}
                   color="primary" >Contactar a {publicacion.ownerName}
                 </Button>
                 <Button color="primary"
@@ -115,7 +194,15 @@ export default class ListaPublicaciones extends Component {
           </Col>
         );
       });
-      resp = (<Row>{resp}</Row>);
+
+      //wraps the resp on the appropiate component
+      resp = (
+        <div>
+          <Row>{resp}</Row>
+          <br />
+          {this.renderPagination()}
+        </div>
+      );
     } else {
       resp = this.state.publicacionSelected.comentarios.map((n, i) => {
         return (
@@ -176,7 +263,7 @@ export default class ListaPublicaciones extends Component {
                       </InputGroup>
                     </FormGroup>
 
-                    <br/>
+                    <br />
                     <Button color="primary">Comentar</Button>
                   </CardBody>
                 </Card>
@@ -189,7 +276,7 @@ export default class ListaPublicaciones extends Component {
     }
     return resp;
   }
-  render () {
+  render() {
     return (<div><h1>Publicaciones de los demas </h1>
       {this.renderizarPublicaciones()}</div>);
   }

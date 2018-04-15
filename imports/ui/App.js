@@ -121,7 +121,7 @@ class App extends Component {
           <Nav className="ml-auto" navbar />
         </Navbar>
         <Jumbotron>
-          <h1> Bienvenido {usuario}</h1>
+          <h1> Bienvenido{usuario}</h1>
         </Jumbotron>
         {cuerpo}
       </div>
