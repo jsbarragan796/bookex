@@ -123,6 +123,7 @@ export default class Home extends Component {
           <Col sm="4" >
             {this.cosa()}
           </Col>
+
           <Col sm="8">
             <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
               chatSeleccionado={this.props.chatSeleccionado}
@@ -218,8 +219,7 @@ export default class Home extends Component {
           <TabPane tabId="1">
             <Row>
               <Col sm="12">
-                <h1>Tus mensajes</h1>
-                {this.darChats()}
+                {this.renderListaPub()}
               </Col>
             </Row>
           </TabPane>
@@ -233,7 +233,8 @@ export default class Home extends Component {
           <TabPane tabId="3">
             <Row>
               <Col sm="12">
-                {this.renderListaPub()}
+                <h1>Tus mensajes</h1>
+                {this.darChats()}
               </Col>
             </Row>
           </TabPane>
