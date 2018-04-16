@@ -123,7 +123,16 @@ export default class Chat extends Component {
     n = c * n;
     n += calificacion;
     n = n / (c + 1);
-    Meteor.call("add.calificacion", name2, ownerId2, n, c + 1);
+    let callback = (error) => {
+      if (error) {
+        let msg = error.reason;
+        this.setState({
+          mensaje: msg,
+          visibleModal: true,
+          msgError: true });
+      }
+    };
+    Meteor.call("add.calificacion", name2, ownerId2, n, c + 1, callback);
     // this.props.enviarMensaje(text, ownerId2, chatId, name2);
     this.eliminarChat(this.props.chatSeleccionado._id);
     this.onDismiss();
