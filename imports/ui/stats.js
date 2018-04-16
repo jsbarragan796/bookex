@@ -185,23 +185,27 @@ export default class Stats extends Component {
     );
   }
   listaPublicaciones (publicaciones) {
-    return publicaciones.map((n) => {
-      return (<li key={n._id}>
-        Titulo: {n.titulo},
-        Dueño: {n.ownerName}
-      </li>);
-    });
+    return (<Col>{
+      publicaciones.map((n) => {
+        return (<li key={n._id}>
+          <strong>Título:</strong> {n.titulo}
+        </li>);
+      })
+    }</Col>);
   }
   listaCalificaciones (publicaciones) {
-    return publicaciones.map((n) => {
-      return (
-        <li key={n._id}>
-          Nombre usuario: {n.username},
-          Calificación: {Math.trunc(n.nota * 100) / 100
-          /*evil hack to get a whole number or the fisrt 2 decimal digits*/}
-        </li>
-      );
-    });
+    return (<Col>
+      {publicaciones.map((n) => {
+        return (
+          <li key={n._id}>
+            <strong>Nombre usuario: </strong> {n.username}
+            {"  "}
+            <strong>Calificación: </strong> {Math.trunc(n.nota * 100) / 100
+            /*evil hack to get a whole number or the fisrt 2 decimal digits*/}
+          </li>
+        );
+      })}
+    </Col>);
   }
   render () {
     return (
