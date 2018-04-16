@@ -1,9 +1,8 @@
 import { DDPRateLimiter } from "meteor/ddp-rate-limiter";
 
-DDPRateLimiter.setErrorMessage(
-  (tiempo) => {
-    const time = Math.ceil(tiempo / 1000);
-    const seconds = time === 1 ? "segundo" : "segundos";
-    return "Calmado hemos recibido demasiadas solicitudes, espera " + time + " " + seconds;
-  }
-);
+DDPRateLimiter.setErrorMessage(({ timeToReset }) => {
+  const time = Math.ceil(timeToReset / 1000);
+  const seconds = time === 1 ? "segundo" : "segundos";
+  return `Calmado tigre hemos recibido demasiadas solicitudes (¿no estarás saboteando la aplicación 👀?), espera
+  ${time} ${seconds}.`;
+});

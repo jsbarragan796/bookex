@@ -22,13 +22,15 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       visibleModal: false,
-      mensaje: ""
+      mensaje: "",
+      msgError: false
     };
     this.enviarMensaje = this.enviarMensaje.bind(this);
     this.eliminarChat = this.eliminarChat.bind(this);
     this.calificar = this.calificar.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onMostrar = this.onMostrar.bind(this);
+    this.modalMensaje = this.modalMensaje.bind(this);
   }
   onMostrar (nombreChat) {
     let msg = "Antes de terminar debes calificar a " + nombreChat + ".";
@@ -38,7 +40,9 @@ export default class Chat extends Component {
   }
 
   onDismiss () {
-    this.setState({ visibleModal: false });
+    this.setState({ visibleModal: false,
+      msgError: false,
+      mensaje: "" });
   }
 
   renderizarMensajes () {
@@ -81,12 +85,17 @@ export default class Chat extends Component {
       const name2 = this.props.chatSeleccionado.ownerId2 === this.props.usuario._id ?
         this.props.chatSeleccionado.username1 : this.props.chatSeleccionado.username2;
       const chatId = this.props.chatSeleccionado._id;
-
+      let callback = (error) => {
+        if (error) {
+          let msg = error.reason;
+          this.setState({
+            mensaje: msg,
+            visibleModal: true,
+            msgError: true });
+        }
+      };
       // Sends the message to the db
-
-      Meteor.call("noti.insert", text, ownerId2, chatId, name2, this.props.usuario.username);
-
-
+      Meteor.call("noti.insert", text, ownerId2, chatId, name2, this.props.usuario.username, callback);
       // Cleans the chat
       ReactDOM.findDOMNode(this.refs.mensaje).value = "";
     }
@@ -120,28 +129,39 @@ export default class Chat extends Component {
     this.onDismiss();
     ReactDOM.findDOMNode(this.refs.calificacion).value = 1;
   }
+  modalMensaje () {
+    let resp = "";
+    if (this.state.msgError) {
+      resp = <ModalBody><h5>{this.state.mensaje}</h5></ModalBody>;
+    }
+    if (!this.state.msgError && this.state.visibleModal) {
+      resp = (<ModalBody>
+        <h4>{this.state.mensaje}</h4>
+        <Form className="new-2" onSubmit={this.calificar}>
+          <FormGroup>
+            <InputGroup>
+              <Input className="abajo" type="select" name="calificacion" id="calificacion" ref="calificacion">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </Input>
+              <Button className="abajo" color="success">Calificar</Button>
+            </InputGroup>
+          </FormGroup>
+        </Form>
+      </ModalBody>);
+    }
+    return resp;
+  }
+
   render () {
     return (
       <div>
         <Modal isOpen={this.state.visibleModal} toggle={this.onDismiss} className="Notificacion">
           <ModalHeader toggle={this.onDismiss}>Advertencia</ModalHeader>
-          <ModalBody>
-            <h4>{this.state.mensaje}</h4>
-            <Form className="new-2" onSubmit={this.calificar}>
-              <FormGroup>
-                <InputGroup>
-                  <Input className="abajo" type="select" name="calificacion" id="calificacion" ref="calificacion">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Input>
-                  <Button className="abajo" color="success">Calificar</Button>
-                </InputGroup>
-              </FormGroup>
-            </Form>
-          </ModalBody>
+          {this.modalMensaje()}
           <ModalFooter>
             <Button color="danger" onClick={this.onDismiss}>Cancelar</Button>
           </ModalFooter>
