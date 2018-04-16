@@ -106,7 +106,9 @@ export default class Home extends Component {
       let n = this.props.chatSeleccionado;
       chats = (
         <Row>
-          {chats}
+          <Col sm="4">
+            {chats}
+          </Col>
           <Col sm="8">
             <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
               chatSeleccionado={this.props.chatSeleccionado}

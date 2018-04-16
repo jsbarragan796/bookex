@@ -221,7 +221,7 @@ export default class ListaPublicaciones extends Component {
       // Makes the card for every publication
       resp = publicaciones.map((publicacion) => {
         return (
-          <Col sm="4" key={publicacion._id}>
+          <Col className="abajo" sm="4" key={publicacion._id}>
             <Card >
               <CardBody>
                 <CardTitle>Título: {publicacion.titulo} </CardTitle>
@@ -237,11 +237,11 @@ export default class ListaPublicaciones extends Component {
                   <strong> Nota: </strong> {this.props.getNota(publicacion.nota)}
                 </CardText>
                 <Button color="primary"
-                  onClick={() => this.seleccionarPublicacion(publicacion)}>Ver detalle
+                  onClick={() => this.seleccionarPublicacion(publicacion)}>Opciones y contacto
                 </Button>
                 {"  "}
                 <Button color="primary"
-                  onClick={() => this.props.publicacionExSelecionada(publicacion)} > Añade uno
+                  onClick={() => this.props.publicacionExSelecionada(publicacion)} >Añade uno igual
                 </Button>
               </CardBody>
             </Card>

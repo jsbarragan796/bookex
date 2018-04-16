@@ -348,7 +348,7 @@ export default class Publicacion extends Component {
         resp2 = this.renderizarPublicacion();
       }
       resp = (<div>
-        <h1>Tus Publicaciones  </h1>  <Button onClick={this.cambioVista} color="primary">Crear publicacion</Button>
+        <h1>Tus Publicaciones  </h1>  <Button onClick={this.cambioVista} color="primary">Agregar un libro nuevo</Button>
         <hr/>
         {resp2}
         <br />
