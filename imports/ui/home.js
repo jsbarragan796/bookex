@@ -37,6 +37,7 @@ export default class Home extends Component {
     this.publicacionExSelecionada = this.publicacionExSelecionada.bind(this);
     this.quitarPublicacion = this.quitarPublicacion.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.toggleIniciochat = this.toggleIniciochat.bind(this);
   }
   toggle (tab) {
     if (this.state.activeTab !== tab) {
@@ -44,6 +45,11 @@ export default class Home extends Component {
         activeTab: tab
       });
     }
+  }
+  toggleIniciochat () {
+    this.setState({
+      activeTab: "3"
+    });
   }
   onMostrar (msg) {
     this.setState({
@@ -158,7 +164,7 @@ export default class Home extends Component {
         publicaciones={this.props.publicaciones}
         usuario={this.props.usuario}
         getNota={this.getNota}
-        alert={this.onMostrar}
+        alert={this.toggleIniciochat}
         publicacionExSelecionada={this.publicacionExSelecionada}
       />
     );
