@@ -28,7 +28,7 @@ export default class Stats extends Component {
     let calificaciones = this.darPublicacionesOrdenadas(this.props.calificaciones, comparadorNota);
     calificaciones = calificaciones.slice(0, 5);
     return (
-      <Col sm="4">
+      <Col sm="4" className="abajo">
         <Card>
           <CardBody>
             <CardTitle>Top 5  mejores usuarios</CardTitle>
@@ -56,7 +56,7 @@ export default class Stats extends Component {
     let calificaciones = this.darPublicacionesOrdenadas(this.props.calificaciones, comparadorNota);
     calificaciones = calificaciones.slice(0, 5);
     return (
-      <Col sm="4">
+      <Col sm="4" className="abajo">
         <Card>
           <CardBody>
             <CardTitle>Top 5 peores usuarios</CardTitle>
@@ -84,7 +84,7 @@ export default class Stats extends Component {
     let publicaciones = this.darPublicacionesOrdenadas(this.props.publicaciones, comparadorNota);
     publicaciones = publicaciones.slice(0, 5);
     return (
-      <Col sm="4">
+      <Col sm="4" className="abajo">
         <Card>
           <CardBody>
             <CardTitle>Top 5 Publicaciones por nota</CardTitle>
@@ -113,7 +113,7 @@ export default class Stats extends Component {
     let publicaciones = this.darPublicacionesOrdenadas(this.props.publicaciones, comparadorNota);
     publicaciones = publicaciones.slice(0, 5);
     return (
-      <Col sm="4">
+      <Col sm="4" className="abajo">
         <Card>
           <CardBody>
             <CardTitle>Top 5 Publicaciones mayor valor venta</CardTitle>
@@ -141,7 +141,7 @@ export default class Stats extends Component {
     let publicaciones = this.darPublicacionesOrdenadas(this.props.publicaciones, comparadorNota);
     publicaciones = publicaciones.slice(0, 5);
     return (
-      <Col sm="4">
+      <Col sm="4" className="abajo">
         <Card>
           <CardBody>
             <CardTitle>Top 5 Publicaciones menor valor venta</CardTitle>
@@ -169,7 +169,7 @@ export default class Stats extends Component {
     let publicaciones = this.darPublicacionesOrdenadas(this.props.publicaciones, comparadorNota);
     publicaciones = publicaciones.slice(0, 5);
     return (
-      <Col sm="4">
+      <Col sm="4" className="abajo">
         <Card>
           <CardBody>
             <CardTitle>Top 5 Publicaciones por número comentarios</CardTitle>
