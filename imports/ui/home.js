@@ -195,7 +195,7 @@ export default class Home extends Component {
               className={classnames({ active: this.state.activeTab === "1" })}
               onClick={() => { this.toggle("1"); }}
             >
-              Tus mensajes
+              Libros
             </NavLink>
           </NavItem>
           <NavItem>
@@ -203,7 +203,7 @@ export default class Home extends Component {
               className={classnames({ active: this.state.activeTab === "2" })}
               onClick={() => { this.toggle("2"); }}
             >
-              Tus Publicaciones
+              Tus libros
             </NavLink>
           </NavItem>
           <NavItem>
@@ -211,7 +211,8 @@ export default class Home extends Component {
               className={classnames({ active: this.state.activeTab === "3" })}
               onClick={() => { this.toggle("3"); }}
             >
-              Publicaciones
+              Tus mensajes
+
             </NavLink>
           </NavItem>
         </Nav>
