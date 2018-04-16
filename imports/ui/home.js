@@ -26,7 +26,7 @@ export default class Home extends Component {
     super(props);
     this.state = {
       visibleModal: true,
-      mensaje: "Bookex está recolectando imformacion de lo que haces con Hotjar." +
+      mensaje: "Bookex está recolectando información de lo que haces con Hotjar y Google Analytics." +
       " Al usar la aplicación aceptas la captura de tu interacción con la aplicación",
       publicacionExSel: null,
       activeTab: "1"
