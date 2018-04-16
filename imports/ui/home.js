@@ -85,29 +85,43 @@ export default class Home extends Component {
     }
   }
 
+  cosa () {
+    let resp;
+    resp = this.props.chats.map((n, i) => {
+      return (
+        <Col key={i}>
+          <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
+            {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
+            {" - "}
+            {n.username1 === this.props.usuario.username ?
+              this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1) }
+          </ListGroupItem>
+        </Col>
+      );
+    });
+    return resp;
+  }
+
   darChats () {
     let chats = "No tienes chats 😢";
     if (this.props.chats.length > 0) {
-      chats = this.props.chats.map((n, i) => {
-        return (
-          <Col sm="4" key={i}>
-            <ListGroupItem onClick={() => this.props.seleccionarChat(n)} tag="button" key={i} action>
-              {n.username1 === this.props.usuario.username ? n.username2 : n.username1}
-              {" - "}
-              {n.username1 === this.props.usuario.username ?
-                this.darCalificacion(n.ownerId2) : this.darCalificacion(n.ownerId1) }
-            </ListGroupItem>
+      chats = (
+        <Row>
+          <Col sm="4" >
+            {this.cosa()}
           </Col>
-        );
-      });
+          <Col sm="8">
+            {"  "}
+          </Col>
+        </Row>);
     }
     if (this.props.chatSeleccionado !== null &&
-    typeof this.props.chats !== "undefined") {
+              typeof this.props.chats !== "undefined") {
       let n = this.props.chatSeleccionado;
       chats = (
         <Row>
-          <Col sm="4">
-            {chats}
+          <Col sm="4" >
+            {this.cosa()}
           </Col>
           <Col sm="8">
             <Chat salirChat={this.props.desSeleccionarChat} usuario={this.props.usuario}
