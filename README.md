@@ -31,6 +31,9 @@ After all the npm packages are downloaded you are going to need to run it. For t
 ### Seeing it Live
 Now you only need to open your browser and write ```localhost:3000``` on the address bar and send it to see the live version of the project running locally.
 
+## Tests
+In order to use the test for this app 
+
 ## Authors
 * [__Juan Sebastian__](https://github.com/jsbarragan796)
 * [__Camilo Zambrano Votto__](https://github.com/cawolfkreo)
