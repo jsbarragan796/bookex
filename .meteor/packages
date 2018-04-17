@@ -24,5 +24,8 @@ accounts-password
 session
 accounts-google
 google-config-ui
-meteortesting:mocha
 ddp-rate-limiter
+dburles:factory
+xolvio:cleaner
+practicalmeteor:faker
+cultofcoders:mocha

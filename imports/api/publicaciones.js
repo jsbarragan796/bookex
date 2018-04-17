@@ -53,7 +53,6 @@ Meteor.methods({
     check(publicacion.edicion, String);
     check(publicacion.estado, String);
     check(publicacion.para, String);
-    check(publicacion.autores, String);
     if (!this.userId) {
       throw new Meteor.Error("not-authorized");
     }
