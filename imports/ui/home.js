@@ -90,7 +90,7 @@ export default class Home extends Component {
       return this.getNota(0);
     }
   }
-
+ // Always use meaningful names on methods and variables
   cosa () {
     let resp;
     resp = this.props.chats.map((n, i) => {
