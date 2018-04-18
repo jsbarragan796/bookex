@@ -1,3 +1,4 @@
+/*Deberia granularizar mas sus componentes*/
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
