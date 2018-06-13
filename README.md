@@ -15,7 +15,7 @@ This app uses:
 This is a project for a web development class in [Uniandes](https://www.uniandes.edu.co). The objective is to make a quick project using node, MongoDB, Meteor and ReactJS.
 
 ## Getting Started
-if you want to run this project locally you are going to need ```npm``` and ```Meteor```. If you want to see a live demo of the project already deployed go [here.](https://book-ex.herokuapp.com/)
+if you want to run this project locally you are going to need ```npm``` and ```Meteor```. If you want to see a live demo of the project already deployed go [here.](https://book-ex3.herokuapp.com/)
 
 ## Deployment
 If you are going to deploy locally and not check the [demo](https://book-ex2.herokuapp.com/) then the first step is to download this repository on your system. Once you are done with that then:
