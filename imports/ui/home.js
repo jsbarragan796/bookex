@@ -182,7 +182,8 @@ export default class Home extends Component {
     }
     return resp;
   }
-
+// It is a little confusing to have two different navbars. Conditional redering would put it all in just one navbar
+//The go back button in the browser doesnt work
   render () {
     return (
       <div>
